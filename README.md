@@ -1,7 +1,8 @@
 # Autonomous-Kartrider
 건국대 2020 2학기 드림학기제 자율주행 카트라이더
 
-## 강화학습: 17학번 이관석 영상처리: 17학번 윤동근
+### 강화학습: 17학번 이관석 
+### 영상처리: 17학번 윤동근
 
 ### 주의사항
 - 게임 내 설정 -> 그래픽 -> 그래픽 설정 -> 창모드 ON, 그외 모두 OFF
@@ -23,7 +24,7 @@
 
 
 ---
-Keyinput.py 사용법 **Python 관리자 권한으로 실행할 것**
+Keyinput.py 사용법 **[Python 관리자 권한으로 실행할 것]**
 
 `from Keyinput import PressKey, ReleaseKey, FORWARD
 
