@@ -25,7 +25,7 @@
 
 
 ---
-Keyinput.py 사용법 **[Python 관리자 권한으로 실행할 것]**
+Keyinput.py 사용법 
 
     from Keyinput import PressKey, ReleaseKey, FORWARD
     
@@ -33,5 +33,5 @@ Keyinput.py 사용법 **[Python 관리자 권한으로 실행할 것]**
     time.sleep(1)
     ReleaseKey(FORWARD)
 
-    #전진에 해당하는 입력이 1초 동안 입력
-    #FORWARD 외에도 다른 필요 입력의 Scan Code가 Keyinput에 정의되어 있음
+    #전진에 해당하는 키가 1초 동안 입력
+    #FORWARD 외에도 다른 필요 키의 Scan Code가 Keyinput에 정의되어 있음
