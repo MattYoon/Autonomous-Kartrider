@@ -32,6 +32,6 @@ PressKey(FORWARD)
 
 time.sleep(1)
 
-ReleaseKey(FORWARD)
-`
+ReleaseKey(FORWARD)`
+
 *전진에 해당하는 입력(숫자 8)이 1초 동안 입력 *
