@@ -26,10 +26,10 @@
 Keyinput.py 사용법 **Python 관리자 권한으로 실행할 것**
 `from Keyinput import PressKey, ReleaseKey, FORWARD
 
-# FORWARD에 해당하는 키보드 입력(숫자 8)이 1초간 입력됨
 PressKey(FORWARD)
-time.sleep(1)
-ReleaseKey(FORWARD)
 
-# Keyinput.py에 FORWARD 외에도 필요한 scan code들이 정의되어 있음`
+time.sleep(1)
+
+ReleaseKey(FORWARD)
+`
 
