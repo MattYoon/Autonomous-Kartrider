@@ -28,11 +28,9 @@
 Keyinput.py 사용법 **[Python 관리자 권한으로 실행할 것]**
 
     from Keyinput import PressKey, ReleaseKey, FORWARD
-
+    
     PressKey(FORWARD)
-
     time.sleep(1)
-
     ReleaseKey(FORWARD)
 
     #전진에 해당하는 입력이 1초 동안 입력
