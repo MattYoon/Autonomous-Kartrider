@@ -9,7 +9,7 @@
 - 게임 내에서 Tab 키를 눌러 미니맵을 가장 왼쪽 위치로 이동시켜 주세요
 - **Python을 관리자 권한으로 실행시켜 주세요(어드민 아닐시 Keyinput.py 사용 불가)**
 
-### 필요 라이브러리
+### 설치 필요 라이브러리
 1. cv2 https://pypi.org/project/opencv-python/
 2. mss(화면 영상 추출) https://pypi.org/project/mss/
 
