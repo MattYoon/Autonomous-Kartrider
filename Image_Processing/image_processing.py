@@ -1,5 +1,5 @@
-from Frame import Frame
-from Countdown import checkStart
+from Image_Processing.Frame import Frame
+from Image_Processing.countdown import checkStart
 import cv2
 import time as T
 

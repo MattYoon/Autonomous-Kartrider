@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import time
-from Keyinput import PressKey, FORWARD
+from keyinput import PressKey, FORWARD
 
 start_nums = []
 num = 0
