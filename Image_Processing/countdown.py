@@ -1,5 +1,6 @@
 import cv2
-from keyinput import PressKey, ReleaseKey, FORWARD
+from keyinput import PressAndRelease, FORWARD
+import threading
 import time
 
 
@@ -20,21 +21,18 @@ def checkStart(img):
     _, roi = cv2.threshold(roi, 50, 255, cv2.THRESH_BINARY_INV)
     diff = cv2.bitwise_xor(roi, start_1)
     diff_cnt = cv2.countNonZero(diff)
-    if diff_cnt < 500:
-        print("Ready")
+    if diff_cnt == 2:
         flag1 = True
-        flag2 = False
-        return False
-    if flag1:
         if not flag2:
+            print("Ready")
             flag2 = True
-            return False
-        else:
-            print("Go!")
-            PressKey(FORWARD)
-            time.sleep(2)
-            ReleaseKey(FORWARD)
-            return True
+            time.sleep(0.5)  # 왠지는 모르겠는데 sleep 없으면 가끔씩 제대로 작동 안함
+        return False
+    elif flag1:
+        print("Go!")
+        thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 2])
+        thread.start()
+        return True
     flag1 = False
     flag2 = False
     return False

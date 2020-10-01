@@ -96,7 +96,7 @@ def shiftLeft(origin, left_con):
     return shifted
 
 
-def get_track(left_cont, right_cont, origin):
+def getTrack(left_cont, right_cont, origin):
     if len(left_cont) - len(right_cont) < 5:
         return averageBoth(left_cont, right_cont)
     else:
@@ -122,7 +122,7 @@ def getPathData(map_up):
     try:
         left_con, right_con = divideCont(contours)
         origin = calcOrigin(contours)
-        track = get_track(left_con, right_con, origin)
+        track = getTrack(left_con, right_con, origin)
         if checkInvalid(left_con, track, right_con, origin):
             origin = prev_origin
             track = prev_track
@@ -139,7 +139,7 @@ def getPathData(map_up):
         prev_con = contours
 
     if (len(origin) > 0) and (len(track) > 0):
-        cv2.circle(map_warped, (origin[0], origin[1]), 4, (255, 255, 0), -1)
+        cv2.circle(map_warped, (origin[0], origin[1]), 5, (255, 0, 0), -1)
         for point in track:
             cv2.circle(map_warped, (point[0], point[1]), 2, (0, 0, 255), -1)
 
