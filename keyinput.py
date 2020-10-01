@@ -1,5 +1,4 @@
 import ctypes
-import time
 
 # 키보드 scan code 목록
 # https://gist.github.com/tracend/912308
@@ -66,11 +65,3 @@ def ReleaseKey(hexKeyCode):
     ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(1), ii_)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
-
-
-if __name__ == "__main__":
-    while (True):
-        PressKey(0x48)
-        time.sleep(0.1)
-        # ReleaseKey(0x48)
-        # time.sleep(1)

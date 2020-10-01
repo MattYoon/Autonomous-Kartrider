@@ -38,9 +38,8 @@ def calcFPS(prevtime):
     return curtime
 
 
-def rmRider(): # 쉐도우 플레이어? 쨌든 그거 제거
+def rmRider(): # 고스트 비활성 있는지 모르고 만들었는데 설정에서 없앨 수 있었음.. 혹시 모르니까 일단 둠
     path = 'C:/Users/Yoon/Documents/카트라이더/라이더데이터'
-    print(os.path.exists(path))
     if os.path.exists(path):
         files = glob.glob(path + '/*')
         for f in files:
