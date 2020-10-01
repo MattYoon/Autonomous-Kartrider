@@ -158,7 +158,7 @@ def getPlayerData(map_down):
     map_gray = cv2.cvtColor(map_valued, cv2.COLOR_BGR2GRAY)
     map_blurred = cv2.GaussianBlur(map_gray, (3, 3), 0)
     _, map_thr = cv2.threshold(map_blurred, 10, 255, cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(map_thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(map_thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     try:
         for cont in contours[0]:
             cont[0][1] += 54
