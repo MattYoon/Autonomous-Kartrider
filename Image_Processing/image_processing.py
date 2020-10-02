@@ -46,32 +46,32 @@ def ipMain():
             quit("Terminated by User")
 
 
-def getOrigin():
+def getOrigin(): #파란점
     global origin
     return origin
 
 
-def getTrack():
+def getTrack(): #빨간선
     global track
     return track
 
 
-def getTrackCon():
+def getTrackCon(): #트랙 주변 얇은 초록선
     global track_con
     return track_con
 
 
-def getPlayerCon():
+def getPlayerCon(): #플레이어 아이콘 초록
     global player_con
     return player_con
 
 
-def getSpeed():
+def getSpeed(): # 속도 10단위
     global speed
     return speed
 
 
-def getReverse():
+def getReverse(): # 역주행인지 아닌지
     global reverse
     return reverse
 
