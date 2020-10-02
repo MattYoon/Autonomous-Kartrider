@@ -1,11 +1,15 @@
 import cv2
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 
 speed_nums = []
 def loadSpeed():
     global speed_nums
     for i in range(10):
-        path = f'data/speed_{i}.jpg'
+        path = BASE_DIR + f'/data/speed_{i}.jpg'
         num = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
         _, num_thresh = cv2.threshold(num, 150, 255, cv2.THRESH_BINARY)
         speed_nums.append(num_thresh)

@@ -174,6 +174,7 @@ matrix = [[9.1871, 7.2361, -738.0782], [0.0035, 15.6320, -658.0158], [-0.0000, 0
 def getMinimapData(minimap):
     global map_warped
     map_warped = cv2.warpPerspective(minimap, np.float32(matrix), (minimap.shape[1], minimap.shape[0]))
+    print("map_warped : ", map_warped.shape)
     origin, track, track_con = getPathData(map_warped[:54])
     player_con = getPlayerData(map_warped[54:])
     cv2.imshow('minimap', map_warped)

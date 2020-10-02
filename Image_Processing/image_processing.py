@@ -32,7 +32,7 @@ def ipCountdown():
 
 
 def ipMain():
-    global origin, track, track_con, player_con, time, speed
+    global origin, track, track_con, player_con, time, speed, reverse
     while True:
         #time = calcFPS(time)
         img = getImg()
@@ -42,13 +42,14 @@ def ipMain():
         origin, track, track_con, player_con = getMinimapData(minimap)
         speed = getSpeedData(img)
         sign_area = img[257:261, 510:514]
-        isReverse(sign_area)
+        reverse = isReverse(sign_area)
         if (cv2.waitKey(1) & 0xFF) == ord('q'):
             cv2.destroyAllWindows()
             quit("Terminated by User")
 
 
 def getOrigin(): #파란점
+    # [ x, y ] 리스트로 옴
     global origin
     return origin
 
