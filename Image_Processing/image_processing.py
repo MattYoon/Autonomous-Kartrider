@@ -49,6 +49,7 @@ def ipMain():
 
 
 def getOrigin(): #파란점
+    # [ x, y ] 리스트로 옴
     global origin
     return origin
 

@@ -2,12 +2,16 @@ import cv2
 from keyinput import PressAndRelease, FORWARD
 import threading
 import time
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 
 start_1 = None
 def loadStart():
     global start_1
-    num_img = cv2.imread("data/start_1.jpg", cv2.IMREAD_GRAYSCALE)
+    num_img = cv2.imread(BASE_DIR + "/data/start_1.jpg", cv2.IMREAD_GRAYSCALE)
     _, num_img = cv2.threshold(num_img, 50, 255, cv2.THRESH_BINARY_INV)
     start_1 = num_img
 
