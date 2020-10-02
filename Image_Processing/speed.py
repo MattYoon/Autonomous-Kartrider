@@ -3,8 +3,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-
 speed_nums = []
 def loadSpeed():
     global speed_nums

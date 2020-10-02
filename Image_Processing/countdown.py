@@ -6,8 +6,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-
 start_1 = None
 def loadStart():
     global start_1

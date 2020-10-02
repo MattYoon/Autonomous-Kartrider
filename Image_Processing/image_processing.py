@@ -20,7 +20,6 @@ def ipCountdown():
     while True:
         #time = calcFPS(time)
         img = getImg()
-        #cv2.imshow('test', img)
         if img is None:
             break
         if checkStart(img):
@@ -32,14 +31,14 @@ def ipCountdown():
 
 
 def ipMain():
-    global origin, track, track_con, player_con, time, speed, reverse
+    global points, origin, player_vertex, speed, reverse
     while True:
         #time = calcFPS(time)
         img = getImg()
         if img is None:
             break
         minimap = img[217:319, 252:431]
-        origin, track, track_con, player_con = getMinimapData(minimap)
+        points, origin, player_vertex = getMinimapData(minimap)
         speed = getSpeedData(img)
         sign_area = img[257:261, 510:514]
         reverse = isReverse(sign_area)
@@ -48,38 +47,34 @@ def ipMain():
             quit("Terminated by User")
 
 
-def getOrigin(): #파란점
-    # [ x, y ] 리스트로 옴
+# 아래의 모든 좌표는 튜플 (x, y) 형식
+
+def getPoints():  # 파란점 4개
+    global points
+    return points  # (l1, r1, l2, r2)  l1 -> 왼쪽 위, r2 -> 오른쪽 아래
+
+
+def getOrigin():   # 빨간점 1개
     global origin
     return origin
 
 
-def getTrack(): #빨간선
-    global track
-    return track
+def getPlayerVertex():  # 초록점 1개
+    global player_vertex
+    return player_vertex
 
 
-def getTrackCon(): #트랙 주변 얇은 초록선
-    global track_con
-    return track_con
-
-
-def getPlayerCon(): #플레이어 아이콘 초록
-    global player_con
-    return player_con
-
-
-def getSpeed(): # 속도 10단위
+def getSpeed():
     global speed
-    return speed
+    return speed  # int
 
 
-def getReverse(): # 역주행인지 아닌지
+def getReverse():  # 역주행인지 아닌지
     global reverse
-    return reverse
+    return reverse  # bool
 
 
-origin, track, track_con, player_con, speed, reverse = None, None, None, None, None, None
+points, origin, player_vertex, speed, reverse = None, None, None, None, None
 
 time = T.time()
 loadData()
