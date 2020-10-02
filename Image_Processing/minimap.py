@@ -142,8 +142,10 @@ def getPathData(map_up):
         cv2.circle(map_warped, (origin[0], origin[1]), 5, (255, 0, 0), -1)
         for point in track:
             cv2.circle(map_warped, (point[0], point[1]), 2, (0, 0, 255), -1)
-
-    return origin, track, contours[0]
+    try:
+        return origin, track, contours[0]
+    except IndexError:
+        return None, None, None
 
 
 value1 = np.array([2, 190, 130])

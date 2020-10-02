@@ -20,11 +20,13 @@ def ipCountdown():
     while True:
         #time = calcFPS(time)
         img = getImg()
+        #cv2.imshow('test', img)
         if img is None:
             break
         if checkStart(img):
             break
         if (cv2.waitKey(1) & 0xFF) == ord('q'):
+            cv2.waitKey(0)
             cv2.destroyAllWindows()
             quit("Terminated by User")
 
