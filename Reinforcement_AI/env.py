@@ -141,6 +141,10 @@ class KartEnv(gym.Env):
 
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
             print("Manual Reset Called", self.speed_queue)
+            release_onekey(keyinput.FORWARD)
+            release_onekey(keyinput.BACK)
+            release_onekey(keyinput.RIGHT)
+            release_onekey(keyinput.LEFT)
             self.reset()
 
 
@@ -154,7 +158,7 @@ class KartEnv(gym.Env):
 
         while True:
             end_time = time.time()
-            if end_time - start_step > 0.5:
+            if end_time - start_step > 0.0001:
                 break
 
         self.pre_speed = cur_speed
