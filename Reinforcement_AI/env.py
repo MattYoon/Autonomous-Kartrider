@@ -6,6 +6,7 @@ import numpy as np
 from gym import spaces
 
 import Image_Processing.image_processing as ip
+import Reinforcement_AI.func as func
 import keyinput
 import reset_env
 
@@ -180,8 +181,8 @@ class KartEnv(gym.Env):
         return value if value < 200 else 200
 
     def reward_player_reddot_diff(self, reddot, player, waypoints, road_diff):
-        way_width = abs(waypoints[2][0] - waypoints[3][0])
-        wayup_width = abs(waypoints[1][0] - waypoints[0][0])
+        way_width = func.distance_twopoint(waypoints[2], waypoints[3])
+        wayup_width = func.distance_twopoint(waypoints[0], waypoints[1])
         diff = abs(reddot[0] - player[0])
         print("way_width : ", way_width, " wayup_width : ", wayup_width, " diff : ", diff, " road_diff : ", road_diff)
         if wayup_width * 3 > way_width and diff < way_width * 0.50:    # 시작점 기준
