@@ -1,5 +1,5 @@
 import cv2
-from keyinput import PressAndRelease, FORWARD
+from keyinput import PressKey, PressAndRelease, FORWARD
 import threading
 import time
 import os
@@ -32,7 +32,7 @@ def checkStart(img):
         return False
     elif flag1:
         print("Go!")
-        thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 2])
+        thread = threading.Thread(target=PressKey, args=[FORWARD])
         thread.start()
         flag1 = False
         flag2 = False
