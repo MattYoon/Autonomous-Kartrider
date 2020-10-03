@@ -1,6 +1,7 @@
 from Image_Processing.misc import getImg, calcFPS
 from Image_Processing.countdown import loadStart, checkStart
 from Image_Processing.minimap import getMinimapData
+from Image_Processing.minimap_handler import resetValues
 from Image_Processing.speed import loadSpeed, getSpeedData
 from Image_Processing.reverse import isReverse
 from reset_env import isReset, initReset, checkIFMenu
@@ -53,6 +54,7 @@ def ipMain():
         if isReset():
             cv2.destroyAllWindows()
             initReset()
+            resetValues()
             ipMain()
 
 

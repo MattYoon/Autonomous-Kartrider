@@ -114,3 +114,10 @@ def calcDist(point1, point2):
     return dist
 
 
+def resetValues():
+    global prev_vertex, prev_origin, prev_l1, prev_r1, prev_l2, prev_r2
+    prev_vertex = (89, 55)
+    prev_origin = (90, 53)
+    prev_l1, prev_r1 = (35, 0), (146, 0)
+    prev_l2, prev_r2 = (33, 53), (147, 53)
+

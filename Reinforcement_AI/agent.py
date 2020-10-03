@@ -2,16 +2,19 @@ from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.her import GoalSelectionStrategy, HERGoalEnvWrapper
 from stable_baselines.common.bit_flipping_env import BitFlippingEnv
-from stable_baselines import DQN, TRPO, HER, ACER, ACKTR
+from stable_baselines import DQN #, TRPO, HER, ACER, ACKTR
 from stable_baselines.common import make_vec_env
 import Reinforcement_AI.env as Kart
 import random
 import numpy as np
 import threading
+#import tensorflow as tf
+
+#sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
 env = Kart.KartEnv()
 vec_env = make_vec_env(Kart.KartEnv, n_envs=1)
-
+8468
 
 def learn():
     model = DQN("MlpPolicy", env, double_q=True, prioritized_replay=True, verbose=1)  # DQN 모델
