@@ -8,7 +8,9 @@ import os
 
 
 # 실행중인 카트라이더 프로그램 윈도우의 위치를 확인하고 해당 윈도우를 캡쳐 후 Numpy 배열로 전환
+win_pos = None
 def getImg():
+    global win_pos
     sct = mss()
     hwnd = win32gui.FindWindow(None, "KartRider Client")
     if hwnd == 0:
@@ -20,6 +22,11 @@ def getImg():
     sct_img = sct.grab(win_pos)
     img = np.array(sct_img)
     return cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+
+
+def getWinPos():
+    global win_pos
+    return win_pos
 
 
 FPS = []

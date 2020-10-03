@@ -9,6 +9,7 @@ LEFT = 0x4B
 BACK = 0x50
 BOOST = 0x1D
 DRIFT = 0x2A
+ESCAPE = 0x01
 
 SendInput = ctypes.windll.user32.SendInput
 

@@ -34,6 +34,8 @@ def checkStart(img):
         print("Go!")
         thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 2])
         thread.start()
+        flag1 = False
+        flag2 = False
         return True
     flag1 = False
     flag2 = False
