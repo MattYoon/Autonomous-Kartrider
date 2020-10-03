@@ -22,8 +22,10 @@ def ipCountdown():
     while True:
         img = getImg()
         if img is None:
+            print("None")
             break
         if checkStart(img):
+            print("Checkstart")
             break
         if (cv2.waitKey(1) & 0xFF) == ord('q'):
             cv2.waitKey(0)
@@ -34,7 +36,7 @@ def ipCountdown():
 def ipMain():
     global points, origin, player_vertex, speed, reverse
     #initGlobals()
-    ipCountdown()
+    # ipCountdown()
     while True:
         img = getImg()
         if img is None:
@@ -91,6 +93,8 @@ points, origin, player_vertex, speed, reverse = None, None, None, None, None
 time = T.time()
 loadData()
 
+print("IMAGE PROCESSING")
 thread = threading.Thread(target=ipMain)
 thread.start()
 T.sleep(0.1)
+print("IMAGE PROCESSING END")

@@ -5,7 +5,8 @@ from gym import error, spaces, utils
 import Image_Processing.image_processing as ip
 import numpy as np
 import keyinput
-import threading
+import reset_env
+from collections import deque
 
 # 012 -> 직진, 정지, 후진
 # 012 -> 우회전, 방향전환없음, 좌회전
@@ -78,9 +79,8 @@ def change_direction(pre_direction, direction):
 class KartEnv(gym.Env):
     """Custom ENV follows gym interface"""
     metadata = {'render.modes': ['human']}
-
-    pre_speed = 0
     pre_direction = 4
+    speed_queue = deque()
 
     def __init__(self):
         super(KartEnv, self).__init__()
@@ -89,18 +89,37 @@ class KartEnv(gym.Env):
         self.reward_range = (0, 1)
 
         # Describe Action space (방향 움직임, 총 9방향 (정지까지 포함))
-        self.action_space = spaces.Discrete(9)
+        self.action_space = spaces.Discrete(5)
 
         # Describe Observation space
         # Box(3, ) 정도? -> 파란선과 플레이어의 거리, 속도, 앞으로의 길의 방향성 (어느쪽으로 휘어있는지)
         self.observation_space = spaces.Box(low=0, high=200, shape=(3,), dtype=np.int32)
 
+        self.speed_queue.append(-10)
+        self.speed_queue.append(-10)
+
     def reset(self):
         # 에피소드의 시작에 불려지며, observation을 돌려준다
-        self.pre_speed = 0
+        self.speed_queue.clear()
+        self.speed_queue.append(-10)
+        self.speed_queue.append(-10)
+        reset_env.manualReset()
+        ip.ipCountdown()
 
         # get_observation
-        observation = np.array([0, 00, self.get_raod_diff(ip.getPoints())])
+        # while reset_env.isReset():
+        #     i = 0
+        road_center = ip.getOrigin()
+        road_points = ip.getPoints()
+        player_pos = ip.getPlayerVertex()
+        road_diff = self.get_road_diff(road_points)
+
+        # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
+        # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
+        reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
+
+        observation = np.array([diff, -10, road_diff])
+        print(observation, self.speed_queue)
         return observation
 
     def step(self, action):
@@ -108,7 +127,6 @@ class KartEnv(gym.Env):
         # 다음 관찰, 보상, 에피소드가 종료되었는지, 기타 정보 4개를 return한다.
 
         start_step = time.time()
-
         self.pre_direction = change_direction(self.pre_direction, action)
 
         road_center = ip.getOrigin()
@@ -116,20 +134,32 @@ class KartEnv(gym.Env):
         player_pos = ip.getPlayerVertex()
         reverse = ip.getReverse()
         cur_speed = ip.getSpeed()
+        road_diff = self.get_road_diff(road_points)
+
+        self.speed_queue.popleft()
+        self.speed_queue.append(cur_speed)
+
+        if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
+            print("Manual Reset Called", self.speed_queue)
+            self.reset()
+
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
-        reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points)
-        reward_speed_diff = self.reward_speed_diff(cur_speed)
+        reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
+        reward_speed_diff = self.reward_speed_diff()
         reward_backward = self.reward_going_back(reverse)
 
-        observation = np.array([diff, cur_speed, self.get_raod_diff(road_points)])
+        observation = np.array([diff, cur_speed, road_diff])
 
         while True:
             end_time = time.time()
-            if end_time - start_step > 1.0:
+            if end_time - start_step > 0.5:
                 break
 
+        self.pre_speed = cur_speed
+
+        print(observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]})
         return observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]}
 
     def render(self, mode='human'):
@@ -139,26 +169,32 @@ class KartEnv(gym.Env):
     def close(self):
         pass
 
-    def get_raod_diff(self, waypoints):
+    def get_road_diff(self, waypoints):
         value = abs(waypoints[0][0] - waypoints[2][0]) + abs(waypoints[1][0] - waypoints[3][0])
         return value if value < 200 else 200
 
-    def reward_player_reddot_diff(self, reddot, player, waypoints):
+    def reward_player_reddot_diff(self, reddot, player, waypoints, road_diff):
         way_width = abs(waypoints[2][0] - waypoints[3][0])
+        wayup_width = abs(waypoints[1][0] - waypoints[0][0])
         diff = abs(reddot[0] - player[0])
-        if diff < way_width * 0.15:
-            return 1, diff
-        else:
-            return -0.5, diff
+        print("way_width : ", way_width, " wayup_width : ", wayup_width, " diff : ", diff, " road_diff : ", road_diff)
+        if wayup_width * 3 > way_width and diff < way_width * 0.50:    # 시작점 기준
+            return 2, diff
+        if diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
+            return 2, diff
+        if road_diff > 100 and diff < way_width * 0.6:      # 커브길일때
+            return 2, diff
 
-    def reward_speed_diff(self, speed):
-        if self.pre_speed < speed:
+        else:
+            return -5, diff
+
+    def reward_speed_diff(self):
+        if self.speed_queue[0] < self.speed_queue[1]:
             reward = 1
-        elif self.pre_speed == speed:
+        elif self.speed_queue[0] == self.speed_queue[1]:
             reward = 0.2
         else:
-            reward = -1
-        self.pre_speed = speed
+            reward = 0
         return reward
 
     def reward_going_back(self, reverse):

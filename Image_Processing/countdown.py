@@ -32,8 +32,10 @@ def checkStart(img):
         return False
     elif flag1:
         print("Go!")
-        thread = threading.Thread(target=PressKey, args=[FORWARD])
+        thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 1.5])
         thread.start()
+        print("Please checkstart TT")
+        time.sleep(1)
         flag1 = False
         flag2 = False
         return True
