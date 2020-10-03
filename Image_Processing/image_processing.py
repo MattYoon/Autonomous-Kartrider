@@ -4,7 +4,7 @@ from Image_Processing.minimap import getMinimapData
 from Image_Processing.minimap_handler import resetValues
 from Image_Processing.speed import loadSpeed, getSpeedData
 from Image_Processing.reverse import isReverse
-from reset_env import isReset, initReset, checkIFMenu
+from reset_env import isReset, initReset, checkIFMenu, releaseAllKeys
 import cv2
 import time as T
 import threading
@@ -55,6 +55,7 @@ def ipMain():
             cv2.destroyAllWindows()
             initReset()
             resetValues()
+            releaseAllKeys()
             ipMain()
 
 

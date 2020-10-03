@@ -1,6 +1,6 @@
 import autoit
 from Image_Processing.misc import getWinPos
-from keyinput import PressAndRelease, ESCAPE
+from keyinput import PressAndRelease, ReleaseKey, FORWARD, RIGHT, LEFT, BACK, ESCAPE
 import numpy as np
 import time
 
@@ -40,6 +40,13 @@ def manualReset():  # 게임 중 reset
     y = win_pos['top']
     autoit.mouse_click("left", x + RESET_X, y + RESET_Y, 1)
     reset_flag = True
+
+
+def releaseAllKeys():
+    ReleaseKey(FORWARD)
+    ReleaseKey(RIGHT)
+    ReleaseKey(LEFT)
+    ReleaseKey(BACK)
 
 
 def isReset():
