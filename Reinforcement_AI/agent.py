@@ -14,7 +14,7 @@ import threading
 
 env = Kart.KartEnv()
 vec_env = make_vec_env(Kart.KartEnv, n_envs=1)
-8468
+
 
 def learn():
     model = DQN("MlpPolicy", env, double_q=True, prioritized_replay=True, verbose=1)  # DQN 모델
