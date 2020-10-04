@@ -27,14 +27,20 @@ def matchNum(img):
 
 def getSpeedData(img):
     nx = img[690:730, 489:511]  # 두자리 수 첫자리
+    xn = img[690:730, 511:533]  # 두자리 수 둘째자리
     nxx = img[690:730, 478:500]  # 세자리 수 첫자리
     xnx = img[690:730, 500:522]  # 세자리 수 둘째자리
+    xxn = img[690:730, 522:544] # 세자리 수 셋째자리
 
     nx_num = matchNum(nx)
+    xn_num = matchNum(xn)
     nxx_num = matchNum(nxx)
     xnx_num = matchNum(xnx)
+    xxn_num = matchNum(xxn)
     final_speed = 0
+    final_speed += xn_num
     final_speed += nx_num * 10
+    final_speed += xxn_num
     final_speed += xnx_num * 10
     final_speed += nxx_num * 100
     return final_speed

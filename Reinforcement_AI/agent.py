@@ -15,12 +15,13 @@ vec_env = make_vec_env(Kart.KartEnv, n_envs=1)
 
 
 def learn():
-    # model = DQN("MlpPolicy", env, double_q=True, prioritized_replay=True, verbose=1)  # DQN 모델
-    for i in range(100):
+    #model = DQN("MlpPolicy", env, double_q=True, prioritized_replay=True, verbose=1)  # DQN 모델
+    for i in range(24, 100):
+        #if i != 0:
         model = DQN.load("kartrider_" + str(i))
         model.set_env(env)
         model.learn(total_timesteps=50000)
-        model.save("kartrider_" + str(i))
+        model.save("kartrider_" + str(i+1))
         del model
 
 
