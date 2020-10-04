@@ -1,12 +1,14 @@
 import time
+from collections import deque
 
 import gym
-from gym import error, spaces, utils
-import Image_Processing.image_processing as ip
 import numpy as np
+from gym import spaces
+
+import Image_Processing.image_processing as ip
+import Reinforcement_AI.func as func
 import keyinput
 import reset_env
-from collections import deque
 
 # 012 -> 직진, 정지, 후진
 # 012 -> 우회전, 방향전환없음, 좌회전
@@ -19,8 +21,8 @@ direction_9 = [
     [fb_direction[0], rl_direction[1]],     # 전진
     [fb_direction[0], rl_direction[2]],     # 전+좌
     [fb_direction[1], rl_direction[0]],     # 우
-    [fb_direction[1], rl_direction[1]],     # 정지
     [fb_direction[1], rl_direction[2]],     # 좌
+    [fb_direction[1], rl_direction[1]],     # 정지
     [fb_direction[2], rl_direction[0]],     # 후+우
     [fb_direction[2], rl_direction[1]],     # 후진
     [fb_direction[2], rl_direction[2]]]     # 후+좌
@@ -146,6 +148,7 @@ class KartEnv(gym.Env):
             release_onekey(keyinput.RIGHT)
             release_onekey(keyinput.LEFT)
             self.reset()
+            return [0, 0, 0], -20, True, {}
 
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
@@ -178,17 +181,18 @@ class KartEnv(gym.Env):
         return value if value < 200 else 200
 
     def reward_player_reddot_diff(self, reddot, player, waypoints, road_diff):
-        way_width = abs(waypoints[2][0] - waypoints[3][0])
-        wayup_width = abs(waypoints[1][0] - waypoints[0][0])
+        way_width = func.distance_twopoint(waypoints[2], waypoints[3])
+        wayup_width = func.distance_twopoint(waypoints[0], waypoints[1])
         diff = abs(reddot[0] - player[0])
         print("way_width : ", way_width, " wayup_width : ", wayup_width, " diff : ", diff, " road_diff : ", road_diff)
         if wayup_width * 3 > way_width and diff < way_width * 0.50:    # 시작점 기준
             return 2, diff
-        if diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
+        elif diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
             return 2, diff
-        if road_diff > 100 and diff < way_width * 0.6:      # 커브길일때
+        elif road_diff > 100 and diff < way_width * 0.6:      # 커브길일때
             return 2, diff
-
+        elif way_width * 3 > wayup_width and diff < way_width * 0.50:     # 도착점 기준
+            return 2, diff
         else:
             return -5, diff
 
