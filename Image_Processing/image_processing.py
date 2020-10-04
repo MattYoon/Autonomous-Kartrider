@@ -37,26 +37,27 @@ def ipCountdown():
 def ipMain():
     global points, origin, player_vertex, speed, reverse
     #initGlobals()
-    # ipCountdown()
+    #ipCountdown()
     while True:
-        img = getImg()
-        if img is None:
-            break
-        checkIFMenu(img[393:394, 437:438])
-        minimap = img[217:319, 252:431]
-        points, origin, player_vertex = getMinimapData(minimap)
-        speed = getSpeedData(img)
-        sign_area = img[257:261, 510:514]
-        reverse = isReverse(sign_area)
-        if (cv2.waitKey(1) & 0xFF) == ord('q'):
-            cv2.destroyAllWindows()
-            quit("Terminated by User")
-        if isReset():
-            cv2.destroyAllWindows()
-            initReset()
-            resetValues()
-            releaseAllKeys()
-            ipMain()
+        while True:
+            img = getImg()
+            if img is None:
+                break
+            checkIFMenu(img[393:394, 437:438])
+            minimap = img[217:319, 252:431]
+            points, origin, player_vertex = getMinimapData(minimap)
+            speed = getSpeedData(img)
+            sign_area = img[257:261, 510:514]
+            reverse = isReverse(sign_area)
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                cv2.destroyAllWindows()
+                quit("Terminated by User")
+            if isReset():
+                cv2.destroyAllWindows()
+                initReset()
+                resetValues()
+                #releaseAllKeys()
+                break
 
 
 def initGlobals():

@@ -137,10 +137,8 @@ class KartEnv(gym.Env):
         reverse = ip.getReverse()
         cur_speed = ip.getSpeed()
         road_diff = self.get_road_diff(road_points)
-
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
-
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
             print("Manual Reset Called", self.speed_queue)
             release_onekey(keyinput.FORWARD)
