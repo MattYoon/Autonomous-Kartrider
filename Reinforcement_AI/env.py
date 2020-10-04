@@ -102,9 +102,15 @@ class KartEnv(gym.Env):
 
     def reset(self):
         # 에피소드의 시작에 불려지며, observation을 돌려준다
+        print("reset called")
         self.speed_queue.clear()
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
+
+        release_onekey(keyinput.FORWARD)
+        release_onekey(keyinput.BACK)
+        release_onekey(keyinput.RIGHT)
+        release_onekey(keyinput.LEFT)
         reset_env.manualReset()
         ip.ipCountdown()
 
@@ -121,7 +127,7 @@ class KartEnv(gym.Env):
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
         observation = np.array([diff, -10, road_diff])
-        print(observation, self.speed_queue)
+        # print(observation, self.speed_queue)
         return observation
 
     def step(self, action):
@@ -140,12 +146,7 @@ class KartEnv(gym.Env):
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
-            print("Manual Reset Called", self.speed_queue)
-            release_onekey(keyinput.FORWARD)
-            release_onekey(keyinput.BACK)
-            release_onekey(keyinput.RIGHT)
-            release_onekey(keyinput.LEFT)
-            self.reset()
+            print("Episode Ended, with return state True")
             return [0, 0, 0], -20, True, {}
 
 
@@ -187,7 +188,7 @@ class KartEnv(gym.Env):
             return 2, diff
         elif diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
             return 2, diff
-        elif road_diff > 100 and diff < way_width * 0.6:      # 커브길일때
+        elif road_diff > 100 and diff < way_width:      # 커브길일때
             return 2, diff
         elif way_width * 3 > wayup_width and diff < way_width * 0.50:     # 도착점 기준
             return 2, diff
