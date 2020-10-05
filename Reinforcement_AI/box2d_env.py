@@ -131,6 +131,9 @@ class BoxKartEnv(gym.GoalEnv):
             # 만약 게임을 완료했다면
             print("Complete Racing!")
             return observation, 500, complete, {"status": "Complete!"}
+        if reverse == 1:
+            print("Reverse Racing!")
+            return observation, -50, True, {"status": "Reverse!"}
 
         # 여기서 pre_speed와 현재 speed를 비교해야 한다
         reward = self.calculate_reward(
@@ -144,14 +147,13 @@ class BoxKartEnv(gym.GoalEnv):
         print(reward, complete, printLoc[action])
         return observation, reward, complete, {"direction": printLoc[action]}
 
-    def calculate_reward(self, speed, reversed, middle_diff, way_down_length):
+    def calculate_reward(self, speed, middle_diff, way_down_length):
         # 프레임당 점수를 깎을 수 있으나, 비효율적이라 생각됨
         reward = 0
 
         out_of_track = True if middle_diff * 2 > way_down_length else False
         # print("speed_diff :", speed, " ", self.pre_speed)
         speed_diff = speed - self.pre_speed
-        reverse = 1 if reversed else 0
 
         # 미니맵의 길에서 유저가 벗어났을 때
         # 미니맵 플레이어의 위치가 실제 트랙의 위치와 같지 않으므로, 외곽선에 붙거나 하면 넘어갈 수 있음
@@ -160,14 +162,14 @@ class BoxKartEnv(gym.GoalEnv):
         # 플레이어의 화살표는 원래 외곽점들의 집합으로 주어지므로, 외곽점들의 집합이 길 안에 속해있는 범위로 계산
         # 예를 들어, 외곽점 집합의 70%가 안에 속해있다면, reward는 -0.6이 됨 (100%가 밖에있다면 -2)
         if out_of_track:
-            reward -= 4
+            reward -= 5
         else:
             reward += 1
 
         # 속도 비교. 속도가 증가하거나 그대로이면 점수를 1 주고, 속도가 줄어들때엔 reward를 주지 않는다.
         # print("speed diff : ", speed_diff)
         if speed_diff >= 0:
-            reward += 1
+            reward += 2
         else:
             pass
         # reward += 1 if speed_diff >= 0 else None
@@ -177,7 +179,5 @@ class BoxKartEnv(gym.GoalEnv):
             reward -= 4
 
         # 뒤로 가는지 비교. 뒤로 갈때는 패널티를 많이 줘야 한다.
-        if reverse:
-            reward -= 20
 
         return reward
