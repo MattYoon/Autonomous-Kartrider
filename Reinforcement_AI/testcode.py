@@ -1,12 +1,6 @@
-from stable_baselines.common.env_checker import check_env
-import gym
+from gym.envs.box2d import CarRacing
 
-test = True
+env = CarRacing()
 
-if test:
-    import Reinforcement_AI.test_env as env
-else:
-    import Reinforcement_AI.env as env
-
-env = env.KartEnv(1, 2)
-check_env(env)
+print(env.action_space)
+print(env.observation_space)
