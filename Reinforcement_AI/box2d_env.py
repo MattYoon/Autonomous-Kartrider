@@ -126,14 +126,16 @@ class BoxKartEnv(gym.GoalEnv):
         if speed == 0:
             # 속도가 0일 때 (벽에 부딛혔을 때)
             print("Crashed to the wall!")
-            return observation, -10, True, {"direction": printLoc[action]}
+            observation = self.reset()
+            return observation, -10, complete, {"direction": printLoc[action]}
         if complete:
             # 만약 게임을 완료했다면
             print("Complete Racing!")
             return observation, 500, complete, {"status": "Complete!"}
         if reverse == 1:
             print("Reverse Racing!")
-            return observation, -50, True, {"status": "Reverse!"}
+            observation = self.reset()
+            return observation, -20, complete, {"status": "Reverse!"}
 
         # 여기서 pre_speed와 현재 speed를 비교해야 한다
         reward = self.calculate_reward(
