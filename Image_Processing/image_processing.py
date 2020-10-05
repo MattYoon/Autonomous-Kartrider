@@ -35,7 +35,7 @@ def ipCountdown():
 
 
 def ipMain():
-    global points, origin, player_vertex, speed, reverse
+    global points, origin, player_vertex, speed, reverse, simple_map
     #initGlobals()
     #ipCountdown()
     while True:
@@ -45,7 +45,7 @@ def ipMain():
                 break
             checkIFMenu(img[393:394, 437:438])
             minimap = img[217:319, 252:431]
-            points, origin, player_vertex = getMinimapData(minimap)
+            points, origin, player_vertex, simple_map = getMinimapData(minimap)
             speed = getSpeedData(img)
             sign_area = img[257:261, 510:514]
             reverse = isReverse(sign_area)
@@ -61,8 +61,8 @@ def ipMain():
 
 
 def initGlobals():
-    global points, origin, player_vertex, speed, reverse
-    points, origin, player_vertex, speed, reverse = None, None, None, None, None
+    global points, origin, player_vertex, speed, reverse, simple_map
+    points, origin, player_vertex, speed, reverse, simple_map = None, None, None, None, None
 
 
 # 아래의 모든 좌표는 튜플 (x, y) 형식
@@ -92,7 +92,14 @@ def getReverse():  # 역주행인지 아닌지
     return reverse  # bool
 
 
-points, origin, player_vertex, speed, reverse = None, None, None, None, None
+def getSimpleMap():
+    global simple_map
+    return simple_map  # (102, 179, 3) numpy array
+    # 102 -> y축, 179 -> x축, 3 -> BGR
+    # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 0, 255) -> red
+
+
+points, origin, player_vertex, speed, reverse, simple_map = None, None, None, None, None, None
 
 time = T.time()
 loadData()

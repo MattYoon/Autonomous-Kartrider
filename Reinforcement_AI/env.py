@@ -188,7 +188,7 @@ class KartEnv(gym.Env):
             return 2, diff
         elif diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
             return 2, diff
-        elif road_diff > 100 and diff < way_width:      # 커브길일때
+        elif road_diff > 100 and diff < way_width * 0.6:      # 커브길일때
             return 2, diff
         elif way_width * 3 > wayup_width and diff < way_width * 0.50:     # 도착점 기준
             return 2, diff

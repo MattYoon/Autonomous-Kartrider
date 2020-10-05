@@ -1,5 +1,6 @@
 import numpy as np
 from math import sqrt
+from copy import deepcopy
 
 
 prev_l1, prev_r1 = (35, 0), (146, 0)
@@ -68,7 +69,8 @@ prev_vertex = (89, 55)
 def getVertex(contours):
     global prev_vertex
     try:
-        vertex = contours[0][0][0]
+
+        vertex = deepcopy(contours[0][0][0])
         vertex[1] += 54
     except IndexError:
         return prev_vertex
