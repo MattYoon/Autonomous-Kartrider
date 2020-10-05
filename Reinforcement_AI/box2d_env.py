@@ -138,7 +138,6 @@ class BoxKartEnv(gym.GoalEnv):
         # 여기서 pre_speed와 현재 speed를 비교해야 한다
         reward = self.calculate_reward(
             speed[0],
-            reverse[0],
             middle_diff[0],
             way_down_length)
         self.pre_speed = speed[0]
