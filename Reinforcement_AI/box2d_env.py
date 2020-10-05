@@ -61,7 +61,7 @@ class BoxKartEnv(gym.GoalEnv):
         number_of_actions = 5
         self.action_space = spaces.Discrete(number_of_actions)
 
-        self.reward_range = (0, 1)
+        self.reward_range = (-15, 1)
 
         # Observation Space 설정
         # Observation시, 미니맵을 가상화한 것을 그대로 보여주는게 나을거같은데...
@@ -158,7 +158,7 @@ class BoxKartEnv(gym.GoalEnv):
         # 플레이어의 화살표는 원래 외곽점들의 집합으로 주어지므로, 외곽점들의 집합이 길 안에 속해있는 범위로 계산
         # 예를 들어, 외곽점 집합의 70%가 안에 속해있다면, reward는 -0.6이 됨 (100%가 밖에있다면 -2)
         if out_of_track:
-            reward -= 5
+            reward -= 8
 
         # 속도 비교. 속도가 증가하거나 그대로이면 점수를 1 주고, 속도가 줄어들때엔 reward를 주지 않는다.
         # print("speed diff : ", speed_diff)
@@ -168,8 +168,12 @@ class BoxKartEnv(gym.GoalEnv):
             pass
         # reward += 1 if speed_diff >= 0 else None
 
+        # 전진만 하는 걸 막는 부분. 벽에 부딛히면 속도가 떨어지는 점을 이용해, 100 이하는 -를 준다.
+        if speed < 100:
+            reward -= 5
+
         # 뒤로 가는지 비교. 뒤로 갈때는 패널티를 많이 줘야 한다.
         if reverse:
-            reward -= 10
+            reward -= 20
 
         return reward
