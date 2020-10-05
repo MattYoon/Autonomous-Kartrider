@@ -82,6 +82,8 @@ class BoxKartEnv(gym.GoalEnv):
         func.release_all()
         reset_env.manualReset()
         ip.ipCountdown()
+        func.release_all()
+        self.pre_direction = 4
         value = self.observation()[0]
         print(value)
         return value
@@ -172,7 +174,7 @@ class BoxKartEnv(gym.GoalEnv):
 
         # 전진만 하는 걸 막는 부분. 벽에 부딛히면 속도가 떨어지는 점을 이용해, 100 이하는 -를 준다.
         if speed < 100:
-            reward -= 3
+            reward -= 4
 
         # 뒤로 가는지 비교. 뒤로 갈때는 패널티를 많이 줘야 한다.
         if reverse:
