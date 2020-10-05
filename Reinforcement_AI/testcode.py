@@ -1,6 +1,5 @@
-from gym.envs.box2d import CarRacing
+import Reinforcement_AI.box2d_env as box_env
 
-env = CarRacing()
+env = box_env.KartEnv()
 
-print(env.action_space)
 print(env.observation_space)
