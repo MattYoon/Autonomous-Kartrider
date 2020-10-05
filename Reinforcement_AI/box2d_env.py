@@ -158,7 +158,7 @@ class BoxKartEnv(gym.GoalEnv):
         # 플레이어의 화살표는 원래 외곽점들의 집합으로 주어지므로, 외곽점들의 집합이 길 안에 속해있는 범위로 계산
         # 예를 들어, 외곽점 집합의 70%가 안에 속해있다면, reward는 -0.6이 됨 (100%가 밖에있다면 -2)
         if out_of_track:
-            reward -= 2
+            reward -= 5
 
         # 속도 비교. 속도가 증가하거나 그대로이면 점수를 1 주고, 속도가 줄어들때엔 reward를 주지 않는다.
         # print("speed diff : ", speed_diff)
