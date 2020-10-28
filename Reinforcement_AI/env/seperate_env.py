@@ -1,3 +1,5 @@
+import time
+
 import gym
 import numpy as np
 from gym import spaces
@@ -22,7 +24,10 @@ direction_9 = [
 printLoc = ["전 + 우", "전진", "전 + 좌", "우회전", "좌회전"]
 
 
-def change_direction(pre_direction, direction, env="env2"):
+
+
+
+def change_direction(pre_direction, direction):
     """
     입력은 모두 [전후표기, 좌우표기] 이며, 1 전진, 0정지, -1후진 ... 1 우, 0 직진, -1 좌이다.
     :param env:
@@ -33,9 +38,6 @@ def change_direction(pre_direction, direction, env="env2"):
     result = direction
     pre_direction = direction_9[pre_direction]
     direction = direction_9[direction]
-
-    if env == "env1":
-        return result
 
     if pre_direction[0] == direction[0]:  # 전후가 같을때
         pass
@@ -70,18 +72,32 @@ def change_direction(pre_direction, direction, env="env2"):
 # 3. 이후 Env1에서 해당 전역 변수를 감지함
 # 4. Env1에서 제대로 된 Reset 실행
 
-
 # 전역 변수
 global_reset_flag = False       # reset flag
 Env1_action = 3                 # Env1의 action 결과
 Env1_observated = False
 Env2_observated = True
 
+# minimap = ip.getSimpleMap() / 255
+# way_middle_pos = ip.getOrigin()
+# way_dot_pos = ip.getPoints()
+# player_pos = ip.getPlayerVertex()
+# speed = min(ip.getSpeed() / 250, 1)
+#
+# def start_continue_peeking():
+#     global minimap, way_dot_pos, way_dot_pos, player_pos, speed
+#     while True:
+#         minimap = ip.getSimpleMap() / 255
+#         way_middle_pos = ip.getOrigin()
+#         way_dot_pos = ip.getPoints()
+#         player_pos = ip.getPlayerVertex()
+#         speed = min(ip.getSpeed() / 250, 1)
+
+
 
 class MinimapEnv(gym.Env):
     """Custom Environments follows gym interface"""
     metadata = {'render.modes': ['human']}
-    pre_direction = 4
 
     def __init__(self):
         super(MinimapEnv, self).__init__()
@@ -126,14 +142,11 @@ class MinimapEnv(gym.Env):
         global Env1_observated
         global Env2_observated
         while not Env2_observated:
-            i = 0
+             pass
 
         # Env1의 step이 진행되었으므로 True로 변경
         Env1_observated = True
         Env2_observated = False
-
-        # 현재 방향과 저번 방향을 바꿈
-        self.pre_direction = change_direction(self.pre_direction, action, env="env1")
 
         # 전역 변수에 action을 저장
         global Env1_action
@@ -150,13 +163,9 @@ class MinimapEnv(gym.Env):
             return observation, -10, False, {"result": "Global Reset Flag is True"}
 
         # 보통의 경우, 보상을 주지 않고, 완주했을 때만 보상을 줌
-        reward = self.calculate_reward(observation)
         print("Env1 steped, action is ", action)
 
-        return observation, reward, False, {"result": "Env1 one frame passed"}
-
-    def calculate_reward(self, observation):
-        return -0.1
+        return observation, -0.1, False, {"result": "Env1 one frame passed"}
 
 
 class AllEnv(gym.Env):
@@ -180,6 +189,7 @@ class AllEnv(gym.Env):
         # 기타 값 설정
         # 플레이어와 중앙선 사이의 전체 비율 측정을 위한, 길의 너비
         self.way_width = 0
+        self.way_player_diff = 0
 
     def reset(self):
         # Global reset flag를 true로 바꾸고, reset될때까지 대기
@@ -187,7 +197,7 @@ class AllEnv(gym.Env):
         global global_reset_flag
         global_reset_flag = True
         while global_reset_flag:
-            i = 0
+            time.sleep(0.1)
 
         print('Global Flag가 False로 변경되었습니다.')
 
@@ -215,6 +225,7 @@ class AllEnv(gym.Env):
 
         # 추가로 저장해야 할 값 설정
         self.way_width = abs(way_dot_pos[2][0] - way_dot_pos[3][0])
+        self.way_player_diff = max(abs(way_dot_pos[2][0] - player_pos[0]), abs(way_dot_pos[3][0] - player_pos[0]))
 
         # 그대로 return
         return np.array([speed, curved, middle_diff, reverse, e1_act])
@@ -234,15 +245,15 @@ class AllEnv(gym.Env):
         Env2_observated = True
 
         # 현재 방향과 저번 방향을 바꿈
-        self.pre_direction = change_direction(self.pre_direction, action, env="env2")
+        self.pre_direction = change_direction(self.pre_direction, action)
 
         # Observation을 받아옴
         observation = self.observation()
 
         # reset을 호출하는 경우
         # 속도가 0일 때
-        if observation[0] == 0:
-            print("Crashed to the wall, Env2 reset will called")
+        if observation[0] < 0.2:
+            print("Crashed to the wall or speed is below 50, Env2 reset will called")
             observation = self.reset()
             return observation, -10, False, {"result": "crashed to the wall"}
         # 역주행할 때
@@ -270,7 +281,8 @@ class AllEnv(gym.Env):
         reward = 0
 
         # 플레이어가 맵 밖으로 나갔는지 측정
-        out_of_track = True if middle_diff * 80 * 2 > self.way_width else False
+        out_of_track = True if middle_diff * 80 * 2 > self.way_width or self.way_player_diff > self.way_width else False
+
 
         # 속도 달라짐 정도 측정
         speed_diff = speed - self.pre_speed
@@ -285,6 +297,8 @@ class AllEnv(gym.Env):
         reward -= 4 if speed < 0.4 else 0
 
         return reward
+
+
 
 
 
