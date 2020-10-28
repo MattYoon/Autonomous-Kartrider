@@ -1,4 +1,4 @@
-import Reinforcement_AI.box2d_env as box_env
+import Reinforcement_AI.env.box2d_env as box_env
 
 env = box_env.KartEnv()
 

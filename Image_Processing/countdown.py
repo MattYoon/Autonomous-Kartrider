@@ -1,8 +1,10 @@
-import cv2
-from keyinput import PressKey, PressAndRelease, FORWARD
+import os
 import threading
 import time
-import os
+
+import cv2
+
+from keyinput import PressAndRelease, FORWARD
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -32,11 +34,11 @@ def checkStart(img):
         return False
     elif flag1:
         print("Go!")
-        PressAndRelease(FORWARD, 2)
-        # thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 1.5])
-        # thread.start()
+        # PressAndRelease(FORWARD, 2)
+        thread = threading.Thread(target=PressAndRelease, args=[FORWARD, 1.5])
+        thread.start()
         # print("Please checkstart TT")
-        # time.sleep(1)
+        time.sleep(1.5)
         flag1 = False
         flag2 = False
         return True

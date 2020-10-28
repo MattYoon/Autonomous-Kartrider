@@ -1,7 +1,7 @@
 from stable_baselines import DQN  # , TRPO, HER, ACER, ACKTR
 
 # import Reinforcement_AI.env as Kart
-from Reinforcement_AI.box2d_env import BoxKartEnv
+from Reinforcement_AI.env.box2d_env import BoxKartEnv
 
 #import tensorflow as tf
 
