@@ -195,7 +195,9 @@ class AllEnv(gym.Env):
         # Global reset flag를 true로 바꾸고, reset될때까지 대기
         print('Env2의 Reset이 호출되었습니다. Global Flag를 True로 바꾸고 기다립니다.')
         global global_reset_flag
+        global Env2_observated
         global_reset_flag = True
+        Env2_observated = True
         while global_reset_flag:
             time.sleep(0.1)
 
