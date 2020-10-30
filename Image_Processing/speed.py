@@ -30,7 +30,7 @@ def getSpeedData(img):
     xn = img[690:730, 511:533]  # 두자리 수 둘째자리
     nxx = img[690:730, 478:500]  # 세자리 수 첫자리
     xnx = img[690:730, 500:522]  # 세자리 수 둘째자리
-    xxn = img[690:730, 522:544] # 세자리 수 셋째자리
+    xxn = img[690:730, 522:544]  # 세자리 수 셋째자리
 
     nx_num = matchNum(nx)
     xn_num = matchNum(xn)
