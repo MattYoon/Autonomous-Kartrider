@@ -69,13 +69,12 @@ prev_vertex = (89, 55)
 def getVertex(contours):
     global prev_vertex
     try:
-
         vertex = deepcopy(contours[0][0][0])
         vertex[1] += 54
     except IndexError:
         return prev_vertex
-    if calcDist(prev_vertex, vertex) > 7:
-        return prev_vertex
+    # if calcDist(prev_vertex, vertex) > 12:
+    #     return prev_vertex
     prev_vertex = tuple(vertex)
     return tuple(vertex)
 

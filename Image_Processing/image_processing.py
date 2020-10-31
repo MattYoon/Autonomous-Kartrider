@@ -8,6 +8,7 @@ from reset_env import isReset, initReset, checkIFMenu
 import cv2
 import time as T
 import multiprocessing
+import numpy as np
 
 # 영상처리 main
 
@@ -24,6 +25,7 @@ def ipCountdown():
         if img is None:
             print("None")
             break
+        resetData()
         if checkStart(img):
             print("Checkstart")
             break
@@ -36,7 +38,6 @@ def ipCountdown():
 def ipMain(d):
     print("Child: Created")
     while True:
-        resetData()
         while True:
             img = getImg()
             if img is None:
@@ -45,6 +46,7 @@ def ipMain(d):
             minimap = img[217:319, 252:431]
             d['points'], d['origin'], d['player_vertex'], d['simple_map'] = getMinimapData(minimap)
             d['speed'] = getSpeedData(img)
+            drawSpeedGauge(d)
             sign_area = img[257:261, 510:514]
             d['reverse'] = isReverse(sign_area)
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
@@ -56,6 +58,17 @@ def ipMain(d):
                 resetValues()
                 #releaseAllKeys()
                 break
+
+
+BUFFER = np.full((40, 179, 3), 255, dtype=np.uint8)
+def drawSpeedGauge(d):
+    global simple_map
+    speed_norm = d['speed'] / 250
+    speed_scaled = int(speed_norm * 179)  # 기존 simple_map 가로 길이에 맞게 정규화
+    simple_map = d['simple_map']
+    simple_map = np.vstack((simple_map, BUFFER))  # 기존 simple_map 아래에 흰색 여백 추가
+    cv2.line(simple_map, (0, 120), (speed_scaled, 120), (0, 255, 0), 10)
+    cv2.imshow('simple_map', simple_map)
 
 
 def resetData():
@@ -91,12 +104,14 @@ def getReverse():  # 역주행인지 아닌지
 
 
 def getSimpleMap():
-    return shared_dict['simple_map']  # (102, 179, 3) numpy array
-    # 102 -> y축, 179 -> x축, 3 -> BGR
-    # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 0, 255) -> red
+    #return shared_dict['simple_map']  # (102, 179, 3) numpy array
+    return simple_map  # (142, 179, 3) numpy array --> 속도 게이지 추가
+    # 142 -> y축, 179 -> x축, 3 -> BGR
+    # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 255, 0) -> green (0, 0, 255) -> red
 
 
 shared_dict = {}
+simple_map = None
 loadData()
 def runIP(manager):
     global shared_dict
@@ -110,13 +125,13 @@ def runIP(manager):
     print("IMAGE PROCESSING END")
 
 
-# if __name__ == "__main__":
-#     from multiprocessing import Manager
-#     print("TRYING TO CREATE MANAGER")
-#     manager = Manager()
-#     print("CREATED MANAGER")
-#     runIP(manager)
-#     while True:
-#         print("현재 속도:", shared_dict['speed'])
-#         T.sleep(1)
+if __name__ == "__main__":
+    from multiprocessing import Manager
+    print("TRYING TO CREATE MANAGER")
+    manager = Manager()
+    print("CREATED MANAGER")
+    runIP(manager)
+    while True:
+        print("현재 속도:", shared_dict['speed'])
+        T.sleep(1)
 
