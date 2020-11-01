@@ -1,6 +1,6 @@
 def launchAgent():
     from stable_baselines import DQN
-    import Reinforcement_AI.env.seperate_env as sep_env
+    import Reinforcement_AI.env.c_seperate_env as sep_env
     from queue import Queue
     from threading import Thread
 
