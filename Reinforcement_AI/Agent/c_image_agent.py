@@ -1,8 +1,9 @@
 def launchAgent():
     import Reinforcement_AI.env.d_image_env as image_env
-    from stable_baselines import DQN, HER, DDPG
+    from stable_baselines import DQN, HER, DDPG, PPO2
+    from stable_baselines.common import make_vec_env
 
-    model_name = "DQN"
+    model_name = "PPO2"
 
     if model_name == "HER":
         model = HER(
@@ -15,6 +16,13 @@ def launchAgent():
             policy="CnnPolicy",
             env=image_env.DDPGImageEnv(),
             normalize_observations=True
+        )
+    if model_name == "PPO2":
+        env = make_vec_env(image_env.DetailedMiniMapEnv, n_envs=1)
+        model = PPO2(
+            policy="CnnPolicy",
+            env=env,
+            verbose=1
         )
     else:
         model = DQN(
@@ -31,6 +39,8 @@ def launchAgent():
                 model = HER.load("detailedmap_HER_" + str(i))
             if model_name == "DDPG":
                 model = DDPG.load("detailedmap_DDPG_" + str(i))
+            if model_name == "PPO2":
+                model = PPO2.load("detailedmap_PPO2_" + str(i))
             else:
                 model = DQN.load("detailedmap_DQN_" + str(i))
 
