@@ -55,6 +55,7 @@ class DetailedMiniMapEnv(gym.Env):
     """Custom Environments follows gym interface"""
     metadata = {'render.modes': ['human']}
     pre_direction = 4
+    pre_speed = 0
 
     def __init__(self):
         super(DetailedMiniMapEnv, self).__init__()
@@ -77,8 +78,8 @@ class DetailedMiniMapEnv(gym.Env):
         return minimap
 
     def observation(self):
-        print(ip.getSimpleMap())
         minimap = ip.getSimpleMap() / 255
+        print(minimap.shape)
 
         # Image Processing에서 값을 받아옴
         way_middle_pos = ip.getOrigin()
