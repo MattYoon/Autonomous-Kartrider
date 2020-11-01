@@ -44,7 +44,7 @@ def ipMain(d):
                 break
             checkIFMenu(img[393:394, 437:438])
             minimap = img[217:319, 252:431]
-            d['points'], d['origin'], d['player_vertex'], d['simple_map'] = getMinimapData(minimap)
+            d['points'], d['origin'], d['player_vertex'], d['simple_map_pre'] = getMinimapData(minimap)
             d['speed'] = getSpeedData(img)
             drawSpeedGauge(d)
             sign_area = img[257:261, 510:514]
@@ -65,7 +65,7 @@ def drawSpeedGauge(d):
     global simple_map
     speed_norm = d['speed'] / 250
     speed_scaled = int(speed_norm * 179)  # 기존 simple_map 가로 길이에 맞게 정규화
-    simple_map = d['simple_map']
+    simple_map = d['simple_map_pre']
     simple_map = np.vstack((simple_map, BUFFER))  # 기존 simple_map 아래에 흰색 여백 추가
     cv2.line(simple_map, (0, 120), (speed_scaled, 120), (0, 255, 0), 10)
     cv2.imshow('simple_map', simple_map)
@@ -125,14 +125,14 @@ def runIP(manager):
     print("IMAGE PROCESSING END")
 
 
-# if __name__ == "__main__":
-#     from multiprocessing import Manager
-#     print("TRYING TO CREATE MANAGER")
-#     manager = Manager()
-#     print("CREATED MANAGER")
-#     runIP(manager)
-#     while True:
-#         #print("현재 속도:", shared_dict['speed'])
-#         print(getSimpleMap().shape)
-#         T.sleep(1)
+if __name__ == "__main__":
+    from multiprocessing import Manager
+    print("TRYING TO CREATE MANAGER")
+    manager = Manager()
+    print("CREATED MANAGER")
+    runIP(manager)
+    while True:
+        #print("현재 속도:", shared_dict['speed'])
+        print(getSimpleMap().shape)
+        #T.sleep(0.5)
 
