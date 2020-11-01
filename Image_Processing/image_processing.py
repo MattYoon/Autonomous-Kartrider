@@ -69,6 +69,7 @@ def drawSpeedGauge(d):
     simple_map = np.vstack((simple_map, BUFFER))  # 기존 simple_map 아래에 흰색 여백 추가
     cv2.line(simple_map, (0, 120), (speed_scaled, 120), (0, 255, 0), 10)
     cv2.imshow('simple_map', simple_map)
+    d['simple_map'] = simple_map
 
 
 def resetData():
@@ -104,14 +105,13 @@ def getReverse():  # 역주행인지 아닌지
 
 
 def getSimpleMap():
-    #return shared_dict['simple_map']  # (102, 179, 3) numpy array
-    return simple_map  # (142, 179, 3) numpy array --> 속도 게이지 추가
+    return shared_dict['simple_map']  # (142, 179, 3) numpy array
     # 142 -> y축, 179 -> x축, 3 -> BGR
     # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 255, 0) -> green (0, 0, 255) -> red
 
 
 shared_dict = {}
-simple_map = None
+#simple_map = None
 loadData()
 def runIP(manager):
     global shared_dict
@@ -125,13 +125,14 @@ def runIP(manager):
     print("IMAGE PROCESSING END")
 
 
-if __name__ == "__main__":
-    from multiprocessing import Manager
-    print("TRYING TO CREATE MANAGER")
-    manager = Manager()
-    print("CREATED MANAGER")
-    runIP(manager)
-    while True:
-        print("현재 속도:", shared_dict['speed'])
-        T.sleep(1)
+# if __name__ == "__main__":
+#     from multiprocessing import Manager
+#     print("TRYING TO CREATE MANAGER")
+#     manager = Manager()
+#     print("CREATED MANAGER")
+#     runIP(manager)
+#     while True:
+#         #print("현재 속도:", shared_dict['speed'])
+#         print(getSimpleMap().shape)
+#         T.sleep(1)
 
