@@ -148,7 +148,7 @@ class DetailedMiniMapEnv(gym.Env):
         reward += 1 if speed_diff >= 0.0 else 0
 
         # 전진만 하는 걸 막는 부분. 벽에 부딛히면 속도가 떨어지는 점을 이용해, 50 이하는 -를 준다.
-        reward -= 4 if speed < 0.2 else 0
+        reward -= 4 if speed < 0.4 else 0
 
         return reward
 

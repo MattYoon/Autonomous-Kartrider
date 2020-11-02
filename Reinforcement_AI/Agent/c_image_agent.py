@@ -18,6 +18,7 @@ def launchAgent():
             normalize_observations=True
         )
     if model_name == "PPO2":
+        # env = image_env.DetailedMiniMapEnv()
         env = make_vec_env(image_env.DetailedMiniMapEnv, n_envs=1)
         model = PPO2(
             policy="CnnPolicy",
