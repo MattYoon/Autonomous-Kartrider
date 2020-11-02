@@ -136,19 +136,19 @@ class DetailedMiniMapEnv(gym.Env):
         reward = 0.0
 
         # 플레이어가 맵 밖으로 나갔는지 측정
-        out_of_track = True if middle_diff * 80 * 2 > self.way_width or self.way_player_diff > self.way_width else False
+        # out_of_track = True if middle_diff * 80 * 2 > self.way_width or self.way_player_diff > self.way_width else False
 
         # 속도 달라짐 정도 측정
         speed_diff = speed - self.pre_speed
 
         # 미니맵의 길에서 유저가 벗어났을 때
-        reward += 1 if not out_of_track else -5
+        # reward += 1 if not out_of_track else -5
 
         # 속도 비교해서 증가하거나 그대로면 +0.1, 아니면 0점
-        reward += 0.1 if speed_diff >= 0.0 else 0
+        reward += 1 if speed_diff >= 0.0 else 0
 
-        # 전진만 하는 걸 막는 부분. 벽에 부딛히면 속도가 떨어지는 점을 이용해, 100 이하는 -를 준다.
-        reward -= 4 if speed < 0.4 else 0
+        # 전진만 하는 걸 막는 부분. 벽에 부딛히면 속도가 떨어지는 점을 이용해, 50 이하는 -를 준다.
+        reward -= 4 if speed < 0.2 else 0
 
         return reward
 
