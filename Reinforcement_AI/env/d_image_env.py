@@ -108,15 +108,15 @@ class DetailedMiniMapEnv(gym.Env):
 
         # reset 호출하는 경우
         # 속도가 30 이하일 때 (보통 벽에 부딛혔을 때)
-        if speed < 0.12:
-            print("Crashed to the wall or speed is < 30, Reset")
-            minimap = self.reset()
-            return minimap, -10, False, {"result": "reset called"}
-        # 역주행시
-        if reverse:
-            print("Reverse Racing")
-            minimap = self.reset()
-            return minimap, -20, False, {"result": "reset called"}
+        # if speed < 0.12:
+        #     print("Crashed to the wall or speed is < 30, Reset")
+        #     minimap = self.reset()
+        #     return minimap, -10, False, {"result": "reset called"}
+        # # 역주행시
+        # if reverse:
+        #     print("Reverse Racing")
+        #     minimap = self.reset()
+        #     return minimap, -20, False, {"result": "reset called"}
 
         # 이전 속도와 지금 속도를 비교함
         reward = self.calculate_reward(
@@ -125,9 +125,12 @@ class DetailedMiniMapEnv(gym.Env):
         )
         self.pre_speed = speed
 
+        # 완주 상태 판단
+        finished = False
+
         print("Action : " + printLoc[action] + "        reward : " + str(reward))
 
-        return minimap, reward, False, {"result": "successfully stepped"}
+        return minimap, reward, finished, {"result": "successfully stepped"}
 
     def calculate_reward(self, speed, middle_diff):
         # 프레임당 점수를 깎을 수 있으나, 비효율적일 것임
