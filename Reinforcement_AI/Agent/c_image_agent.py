@@ -1,3 +1,14 @@
+# 에이전트의 Reset에 대해
+# 에이전트는 timestep만큼 step을 밟고, 이후 reset한다.
+# 따라서, 환경에서 reset을 수행하지 말고, timestep을 적절하게 설정해서 스스로 loss를 줄이게끔 한다.
+# FPS가 130정도 나온다고 잡고, 12950이 95초이니, 일단 제대로 도는지를 테스트하기 위해서는
+# Timestep을 130 * 30정도로 하고 돌려보는게 나을듯
+
+
+
+
+
+
 def launchAgent():
     import Reinforcement_AI.env.d_image_env as image_env
     from stable_baselines import DQN, HER, DDPG, PPO2
@@ -49,7 +60,7 @@ def launchAgent():
                 model = DQN.load("detailedmap_DQN_" + str(i))
                 model.set_env(image_env.DetailedMiniMapEnv())
 
-        model.learn(total_timesteps=50000)
+        model.learn(total_timesteps=3900)
 
         model.save("detailedmap_" + model_name + "_" + str(i+1))
         del model

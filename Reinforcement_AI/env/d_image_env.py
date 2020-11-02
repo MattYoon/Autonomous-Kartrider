@@ -108,15 +108,15 @@ class DetailedMiniMapEnv(gym.Env):
 
         # reset 호출하는 경우
         # 속도가 30 이하일 때 (보통 벽에 부딛혔을 때)
-        if speed < 0.12:
-            print("Crashed to the wall or speed is < 30, Reset")
-            minimap = self.reset()
-            return minimap, -10, False, {"result": "reset called"}
-        # 역주행시
-        if reverse:
-            print("Reverse Racing")
-            minimap = self.reset()
-            return minimap, -20, False, {"result": "reset called"}
+        # if speed < 0.12:
+        #     print("Crashed to the wall or speed is < 30, Reset")
+        #     minimap = self.reset()
+        #     return minimap, -10, False, {"result": "reset called"}
+        # # 역주행시
+        # if reverse:
+        #     print("Reverse Racing")
+        #     minimap = self.reset()
+        #     return minimap, -20, False, {"result": "reset called"}
 
         # 이전 속도와 지금 속도를 비교함
         reward = self.calculate_reward(
