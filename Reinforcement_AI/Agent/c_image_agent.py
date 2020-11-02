@@ -37,17 +37,21 @@ def launchAgent():
         if i != 0:
             if model_name == "HER":
                 model = HER.load("detailedmap_HER_" + str(i))
+                model.set_env(image_env.DetailedMiniMapEnv())
             if model_name == "DDPG":
                 model = DDPG.load("detailedmap_DDPG_" + str(i))
+                model.set_env(image_env.DDPGImageEnv())
             if model_name == "PPO2":
                 model = PPO2.load("detailedmap_PPO2_" + str(i))
+                model.set_env(env)
             else:
                 model = DQN.load("detailedmap_DQN_" + str(i))
+                model.set_env(image_env.DetailedMiniMapEnv())
 
         model.learn(total_timesteps=50000)
 
         model.save("detailedmap_" + model_name + "_" + str(i+1))
-
+        del model
 
 if __name__ == "__main__":
     from Image_Processing.image_processing import runIP
