@@ -55,7 +55,8 @@ def launchAgent():
                 model.set_env(image_env.DDPGImageEnv())
             if model_name == "PPO2":
                 model = PPO2.load("detailedmap_PPO2_" + str(i))
-                model.set_env(env)
+                ppo2_env = make_vec_env(image_env.DetailedMiniMapEnv, n_envs=1)
+                model.set_env(ppo2_env)
             else:
                 model = DQN.load("detailedmap_DQN_" + str(i))
                 model.set_env(image_env.DetailedMiniMapEnv())
