@@ -55,17 +55,24 @@ def launchAgent():
                 model = DDPG.load("detailedmap_DDPG_" + str(i))
                 model.set_env(image_env.DDPGImageEnv())
             if model_name == "PPO2":
-                model = PPO2.load("detailedmap_PPO2_" + str(i))
-                ppo2_env = make_vec_env(image_env.DetailedMiniMapEnv, n_envs=1)
-                model.set_env(ppo2_env)
+                # print('set env')
+                # ppo2_env = make_vec_env(image_env.DetailedMiniMapEnv, n_envs=1)
+                # print('get model')
+                model = PPO2.load("detailedmap_PPO2_" + str(i), env)
+                # print('set model env')
+                # model.set_env(ppo2_env)
             else:
                 model = DQN.load("detailedmap_DQN_" + str(i))
                 model.set_env(image_env.DetailedMiniMapEnv())
 
+        # print('model learn start')
         model.learn(total_timesteps=3900)
+        # print('model learn finished')
 
+        # print('model save start')
         model.save("detailedmap_" + model_name + "_" + str(i+1))
         del model
+        # print('model save end')
 
 if __name__ == "__main__":
     from Image_Processing.image_processing import runIP

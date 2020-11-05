@@ -79,7 +79,7 @@ class DetailedMiniMapEnv(gym.Env):
 
     def observation(self):
         minimap = ip.getSimpleMap() / 255
-        print(minimap.shape)
+        # print(minimap.shape)
 
         # Image Processing에서 값을 받아옴
         way_middle_pos = ip.getOrigin()
