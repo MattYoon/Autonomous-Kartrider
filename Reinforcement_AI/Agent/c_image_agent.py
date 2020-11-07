@@ -46,7 +46,7 @@ def launchAgent():
             verbose=0  # log print
         )
 
-    for i in range(100):
+    for i in range(1000):
         if i != 0:
             if model_name == "HER":
                 model = HER.load("detailedmap_HER_" + str(i))
