@@ -8,13 +8,15 @@ def distance_twopoint(a, b):
 
 
 def press_onekey(direction):
-    None if direction == 0 else keyinput.PressKey(direction)
+    if direction != 0:
+        keyinput.PressKey(direction)
     # thread = threading.Thread(target=keyinput.PressKey, args=[direction])
     # thread.start()
 
 
 def release_onekey(direction):
-    None if direction == 0 else keyinput.ReleaseKey(direction)
+    if direction != 0:
+        keyinput.ReleaseKey(direction)
     # thread = threading.Thread(target=keyinput.ReleaseKey, args=[direction])
     # thread.start()
 
