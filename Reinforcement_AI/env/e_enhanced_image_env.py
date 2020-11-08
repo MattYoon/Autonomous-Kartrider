@@ -82,7 +82,7 @@ class DetailedMiniMapEnv(gym.Env):
         # print(minimap.shape)
 
         # Image Processing에서 값을 받아옴
-        finished = 0    # 추후에 추가될 변수, 맵을 완주함을 표시함, bool형태로 받으면 좋을듯
+        finished = ip.isLap2()    # 추후에 추가될 변수, 맵을 완주함을 표시함, bool형태로 받으면 좋을듯
 
         # 값을 가공함
         speed = ip.getSpeed()   # max값이 250이라 가정
