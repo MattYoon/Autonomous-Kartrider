@@ -79,7 +79,7 @@ def resetData():
     shared_dict['player_vertex'] = (89, 55)
     shared_dict['speed'] = None
     shared_dict['reverse'] = False
-    shared_dict['simple_map'] = None
+    shared_dict['simple_map'] = 0
 
 
 # 아래의 모든 좌표는 튜플 (x, y) 형식
