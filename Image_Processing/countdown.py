@@ -25,7 +25,7 @@ def checkStart(img):
     _, roi = cv2.threshold(roi, 50, 255, cv2.THRESH_BINARY_INV)
     diff = cv2.bitwise_xor(roi, start_1)
     diff_cnt = cv2.countNonZero(diff)
-    if diff_cnt == 2:
+    if diff_cnt == 2:  # 왠지는 모르겠는데 내가 갖고 있는 데이터랑 실제 데이터랑 픽셀이 항상 2개 차이 남
         flag1 = True
         if not flag2:
             print("Ready")

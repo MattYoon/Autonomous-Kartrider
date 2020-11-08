@@ -3,7 +3,7 @@ from Image_Processing.countdown import loadStart, checkStart
 from Image_Processing.minimap import getMinimapData
 from Image_Processing.minimap_handler import resetValues
 from Image_Processing.speed import loadSpeed, getSpeedData
-from Image_Processing.reverse import isReverse
+from Image_Processing.extra import isReverse, checkLap
 from reset_env import isReset, initReset, checkIFMenu
 import cv2
 import time as T
@@ -49,6 +49,8 @@ def ipMain(d):
             drawSpeedGauge(d)
             sign_area = img[257:261, 510:514]
             d['reverse'] = isReverse(sign_area)
+            lap_area = img[21:79, 923:972]
+            d['lap2'] = checkLap(lap_area)
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 cv2.destroyAllWindows()
                 quit("Terminated by User")
@@ -77,9 +79,10 @@ def resetData():
     shared_dict['points'] = (35, 0), (146, 0), (33, 53), (147, 53)
     shared_dict['origin'] = (90, 53)
     shared_dict['player_vertex'] = (89, 55)
-    shared_dict['speed'] = None
+    shared_dict['speed'] = 0
     shared_dict['reverse'] = False
     shared_dict['simple_map'] = 0
+    shared_dict['lap2'] = False
 
 
 # 아래의 모든 좌표는 튜플 (x, y) 형식
@@ -109,6 +112,9 @@ def getSimpleMap():
     # 142 -> y축, 179 -> x축, 3 -> BGR
     # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 255, 0) -> green (0, 0, 255) -> red
 
+def isLap2():  # lap2가 되면 True로 변경됨
+    return shared_dict['lap2']  # bool
+
 
 shared_dict = {}
 #simple_map = None
@@ -132,7 +138,5 @@ if __name__ == "__main__":
     print("CREATED MANAGER")
     runIP(manager)
     while True:
-        #print("현재 속도:", shared_dict['speed'])
-        print(getSimpleMap().shape)
-        #T.sleep(0.5)
+        print(isLap2())
 
