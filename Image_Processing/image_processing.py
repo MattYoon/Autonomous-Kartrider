@@ -3,7 +3,7 @@ from Image_Processing.countdown import loadStart, checkStart
 from Image_Processing.minimap import getMinimapData
 from Image_Processing.minimap_handler import resetValues
 from Image_Processing.speed import loadSpeed, getSpeedData
-from Image_Processing.extra import isReverse, checkLap
+from Image_Processing.extra import isReverse, loadLap, checkLap
 from reset_env import isReset, initReset, checkIFMenu
 import cv2
 import time as T
@@ -16,7 +16,7 @@ import numpy as np
 def loadData():
     loadStart()
     loadSpeed()
-
+    loadLap()
 
 def ipCountdown():
     print("Image Processing Running.. Waiting for Start Cue")
@@ -115,10 +115,9 @@ def getSimpleMap():
 def isLap2():  # lap2가 되면 True로 변경됨
     return shared_dict['lap2']  # bool
 
-
+loadData()
 shared_dict = {}
 #simple_map = None
-loadData()
 def runIP(manager):
     global shared_dict
     print("IMAGE PROCESSING")
