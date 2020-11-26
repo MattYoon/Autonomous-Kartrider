@@ -1,14 +1,17 @@
-from Image_Processing.misc import getImg
+import multiprocessing
+import time as T
+
+import cv2
+import numpy as np
+
 from Image_Processing.countdown import loadStart, checkStart
+from Image_Processing.extra import isReverse
 from Image_Processing.minimap import getMinimapData
 from Image_Processing.minimap_handler import resetValues
+from Image_Processing.misc import getImg
 from Image_Processing.speed import loadSpeed, getSpeedData
-from Image_Processing.extra import isReverse, checkLap
 from reset_env import isReset, initReset, checkIFMenu
-import cv2
-import time as T
-import multiprocessing
-import numpy as np
+
 
 # 영상처리 main
 
@@ -50,7 +53,7 @@ def ipMain(d):
             sign_area = img[257:261, 510:514]
             d['reverse'] = isReverse(sign_area)
             lap_area = img[21:79, 923:972]
-            d['lap2'] = checkLap(lap_area)
+            #d['lap2'] = checkLap(lap_area)
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 cv2.destroyAllWindows()
                 quit("Terminated by User")
@@ -82,7 +85,7 @@ def resetData():
     shared_dict['speed'] = 0
     shared_dict['reverse'] = False
     shared_dict['simple_map'] = 0
-    shared_dict['lap2'] = False
+    #shared_dict['lap2'] = False
 
 
 # 아래의 모든 좌표는 튜플 (x, y) 형식
@@ -131,12 +134,12 @@ def runIP(manager):
     print("IMAGE PROCESSING END")
 
 
-if __name__ == "__main__":
-    from multiprocessing import Manager
-    print("TRYING TO CREATE MANAGER")
-    manager = Manager()
-    print("CREATED MANAGER")
-    runIP(manager)
-    while True:
-        print(isLap2())
+# if __name__ == "__main__":
+#     from multiprocessing import Manager
+#     print("TRYING TO CREATE MANAGER")
+#     manager = Manager()
+#     print("CREATED MANAGER")
+#     runIP(manager)
+#     while True:
+#         print(isLap2())
 

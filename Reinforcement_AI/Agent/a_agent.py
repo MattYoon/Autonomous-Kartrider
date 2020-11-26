@@ -1,11 +1,17 @@
 from stable_baselines import DQN  # , TRPO, HER, ACER, ACKTR
 
+from Reinforcement_AI.env.a_env import KartEnv
 # import Reinforcement_AI.env as Kart
 from Reinforcement_AI.env.b_box2d_env import BoxKartEnv
 
 #import tensorflow as tf
 
 #sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
+test = KartEnv()
+model = DQN("MlpPolicy", test, double_q=True, prioritized_replay=True, verbose=1)
+model.learn(total_timesteps=50000)
+exit(1)
 
 env = BoxKartEnv()
 # dummyenv = FlattenObservation(env)
