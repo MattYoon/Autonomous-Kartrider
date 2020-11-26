@@ -1,11 +1,8 @@
-
-
-def launchAgent(env_name: str, model_name: str):
+def launchAgent(env_name: int, model_name: str):
     """
     :param env_name: 불러올 환경의 이름입니다.
-        1 혹은 simple : 미니맵 이미지를 사용하지 않은, 점 사이의 거리 계산을 한 환경입니다.
-        2 혹은 simple_minimap : 미니맵 이미지를 사용한 모델입니다.
-        3 혹은 detailed_minimap : 미니맵 이미지를 사용하고, 보상을 업데이트한 모델입니다.
+        1 : 미니맵 이미지를 사용하지 않은, 점 사이의 거리 계산을 한 환경입니다.
+        2 : 미니맵 이미지를 사용하고, 보상을 업데이트한 모델입니다.
         다른 값(기본) : 현재 쓰는 모델입니다. 미니맵 이미지를 사용하고, 보상을 다시 업데이트한 모델입니다.
     :param model_name: 설정할 모델의 이름입니다.
         DQN : DQN 모델을 불러옵니다.
@@ -16,15 +13,11 @@ def launchAgent(env_name: str, model_name: str):
 
     from stable_baselines import DQN, HER, PPO2
 
-    if env_name == "simple" or env_name == "1":
+    if env_name == 1:
         from Reinforcement_AI.env.a_env import KartEnv
         kart_env = KartEnv()
         policy = "MlpPolicy"
-    elif env_name == "simple_minimap" or env_name == "2":
-        from Reinforcement_AI.env.b_box2d_env import BoxKartEnv
-        kart_env = BoxKartEnv()
-        policy = "CnnPolicy"
-    elif env_name == "detailed_minimap" or env_name == "3":
+    elif env_name == 2:
         from Reinforcement_AI.env.d_image_env import DetailedMiniMapEnv as DetailedMiniMapEnv1
         kart_env = DetailedMiniMapEnv1()
         policy = "CnnPolicy"
@@ -44,15 +37,33 @@ def launchAgent(env_name: str, model_name: str):
 
     for i in range(1000):
         model.learn(total_timesteps=12500)
-        model.save(env_name + "_" + model_name + "_" + str(i+1))
+        model.save(str(env_name) + "_" + model_name + "_" + str(i+1))
 
 
 if __name__ == "__main__":
-    from Image_Processing.image_processing import runIP
-    from multiprocessing import Manager
 
-    manager = Manager()
-    runIP(manager)
-    launchAgent("4", "PPO2")
+    # 에이전트 및 환경 설정
+    agent = "DQN"
+    env = 3
+    """
+    env: 불러올 환경의 이름입니다. (int)
+        1 : 미니맵 이미지를 사용하지 않은, 점 사이의 거리 계산을 한 환경입니다.
+        2 : 미니맵 이미지를 사용하고, 보상을 업데이트한 모델입니다.
+        다른 값(기본) : 현재 쓰는 모델입니다. 미니맵 이미지를 사용하고, 보상을 다시 업데이트한 모델입니다.
+    agent: 설정할 모델의 이름입니다.
+        DQN : DQN 모델을 불러옵니다.
+        HER : HER 모델을 불러옵니다.
+        다른 값(기본) : PPO2 모델을 불러옵니다.
+    """
+
+    if env==2:#1 <= env <= 2:
+        launchAgent(env, agent)
+    else:
+        from Image_Processing.image_processing import runIP
+        from multiprocessing import Manager
+
+        manager = Manager()
+        runIP(manager)
+        launchAgent(env, agent)
 
 
