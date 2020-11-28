@@ -5,18 +5,18 @@ from time import sleep
 
 
 def getXdiff():
-        px, py = getPlayerVertex()
-        ox, oy = getOrigin()
-        diff = px - ox
+        px, py = getPlayerVertex()  # 초록점
+        ox, oy = getOrigin()  # 빨간점
+        diff = px - ox  # 두 점의 x 좌표 차이
         print("px-ox:", diff)
         return diff
 
 def drive(prev):
     diff = getXdiff()
 
-    if prev * diff > 0:
-        return diff
-    else:
+    if prev * diff > 0:  # diff와 prev의 부호가 같은 경우, 즉 계속 같은 방향으로 회전하면 되는 경우
+        return diff  # 기존 방향으로 계속 회전
+    else:  # 방향을 바꿔야 되는 경우
         releaseAllKeys()
 
     if diff < 0:
