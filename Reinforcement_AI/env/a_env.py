@@ -94,8 +94,8 @@ class KartEnv(gym.Env):
         self.action_space = spaces.Discrete(5)
 
         # Describe Observation space
-        # Box(3, ) 정도? -> 파란선과 플레이어의 거리, 속도, 앞으로의 길의 방향성 (어느쪽으로 휘어있는지)
-        self.observation_space = spaces.Box(low=0, high=200, shape=(4,), dtype=np.int32)
+        # Box(5, ) 정도? -> [ 중앙의 정도, 속도, 길의 커브정도, 차의 꺾인정도, 길의 꺾인정도] (어느쪽으로 휘어있는지)
+        self.observation_space = spaces.Box(low=0, high=200, shape=(5,), dtype=np.int32)
 
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
@@ -120,11 +120,11 @@ class KartEnv(gym.Env):
         # while reset_env.isReset():
         #     i = 0
 
-        # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
+        # observation은 총 5개 - [ 중앙의 정도, 속도, 길의 커브정도, 차의 꺾인정도, 길의 꺾인정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
-        observation = np.array([diff, -10, road_diff, 0])
+        observation = np.array([diff, -10, road_diff, 0, 100])
         # print(observation, self.speed_queue)
         return observation
 
@@ -135,6 +135,7 @@ class KartEnv(gym.Env):
         start_step = time.time()
         self.pre_direction = change_direction(self.pre_direction, action)
         road_center = ip.getOrigin()
+        roadtop_center = ip.getOrigin2()
         road_points = ip.getPoints()
         player_pos = ip.getPlayerVertex()
         road_diff = self.get_road_diff(road_points)
@@ -143,6 +144,7 @@ class KartEnv(gym.Env):
         car_edge = ip.getPlayerEdge()
         print("in step : ", player_pos)
         car_shifted = func.get_shifted(func.get_player_detailed_pos(car_edge[0], player_pos))
+        road_shifted = min(200, max(0, int(func.get_reverse_gradient(road_center, roadtop_center) * 100 + 100)))
 
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
@@ -160,7 +162,7 @@ class KartEnv(gym.Env):
         reward_speed_diff = self.reward_speed_diff()
         reward_backward = self.reward_going_back(reverse)
 
-        observation = np.array([diff, cur_speed, road_diff, min(car_shifted * 34, 200)])
+        observation = np.array([diff, cur_speed, road_diff, min(car_shifted * 34, 200), road_shifted])
 
         while True:     # 시간 Delay줌
             end_time = time.time()

@@ -2,7 +2,8 @@ from time import sleep
 
 import Reinforcement_AI.func as func
 import keyinput
-from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP, getSpeed, getPoints, getPlayerEdge
+from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP, getSpeed, getPoints, getPlayerEdge, \
+    getOrigin2
 from reset_env import releaseAllKeys
 
 
@@ -40,6 +41,10 @@ def drive_v2():
     car_shifted = func.get_shifted(func.get_player_detailed_pos(edge[0], getPlayerVertex()))
     way_width = points[3][0] - points[2][0]
 
+    o1, o2 = getOrigin(), getOrigin2()
+    print(func.get_reverse_gradient(o1, o2))
+
+
     # diff가 음수일땐 차가 좌측에 있을 때, diff가 양수일땐 차가 우측에 있을 때
     # diff가 음수면서, car_shifted가 양수면 (차가 좌측으로 휘어있으면), 우측으로 틀어야 함
     # diff가 양수면서, car_shifted가 음수면 (차가 우측으로 휘어있으면), 좌측으로 틀어야 함
@@ -51,18 +56,18 @@ def drive_v2():
 
     # print(way_width * 0.2, diff)
 
-    if diff < 0:    # 차가 좌측에 있을 때
-        if car_shifted > 0:     # 만약 차가 좌측으로 휘어있으면:
-            # if abs(diff) > way_width * 0.2:
-            keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.01) / speed_time_val)
-        else:                   # 이미 우측으로 휘어있으면?
-            pass                # 방향전환 안함
-    if diff > 0:    # 차가 우측에 있을 떄
-        if car_shifted < 0:     # 만약 차가 우측으로 휘어있으면:
-            # if abs(diff) > way_width * 0.2:
-            keyinput.PressAndRelease(keyinput.LEFT, seconds=abs(diff * 0.01) / speed_time_val)
-        else:
-            pass
+    # if diff < 0:    # 차가 좌측에 있을 때
+    #     if car_shifted > 0:     # 만약 차가 좌측으로 휘어있으면:
+    #         # if abs(diff) > way_width * 0.2:
+    #         keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.01) / speed_time_val)
+    #     else:                   # 이미 우측으로 휘어있으면?
+    #         pass                # 방향전환 안함
+    # if diff > 0:    # 차가 우측에 있을 떄
+    #     if car_shifted < 0:     # 만약 차가 우측으로 휘어있으면:
+    #         # if abs(diff) > way_width * 0.2:
+    #         keyinput.PressAndRelease(keyinput.LEFT, seconds=abs(diff * 0.01) / speed_time_val)
+    #     else:
+    #         pass
 
 
 

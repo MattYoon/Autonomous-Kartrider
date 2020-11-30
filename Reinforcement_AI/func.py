@@ -6,6 +6,9 @@ import keyinput
 def distance_twopoint(a, b):
     return math.sqrt(math.pow(a[0]-b[0], 2) + math.pow(a[1]-b[1], 2))
 
+def get_reverse_gradient(p1, p2):
+    return -1 * (p1[0] - p2[0]) / (p1[1] - p2[1])
+
 
 def press_onekey(direction):
     if direction != 0:
