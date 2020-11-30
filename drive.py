@@ -1,14 +1,15 @@
-from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP
-import keyinput
-from reset_env import releaseAllKeys
 from time import sleep
+
+import keyinput
+from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP, getSpeed, getPoints
+from reset_env import releaseAllKeys
 
 
 def getXdiff():
         px, py = getPlayerVertex()  # 초록점
         ox, oy = getOrigin()  # 빨간점
         diff = px - ox  # 두 점의 x 좌표 차이
-        print("px-ox:", diff)
+        # print("px-ox:", diff)
         return diff
 
 def drive(prev):
@@ -29,6 +30,28 @@ def drive(prev):
         keyinput.PressKey(keyinput.FORWARD)
     return diff
 
+def drive_v2():
+    diff = getXdiff()
+    speed = getSpeed()
+    points = getPoints()
+
+    way_width = points[3][0] - points[2][0]
+
+    if speed < 100:
+        speed_time_val = 1
+    else:
+        speed_time_val = 100 / speed
+
+    print(way_width * 0.2, diff)
+
+    if diff < 0 and way_width * 0.2 < abs(diff):
+        keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.008) / speed_time_val)
+    elif diff > 0 and way_width * 0.2 < abs(diff):
+        keyinput.PressAndRelease(keyinput.LEFT, seconds=abs(diff * 0.008) / speed_time_val)
+
+
+
+
 
 if __name__ == "__main__":
     from multiprocessing import Manager
@@ -36,7 +59,15 @@ if __name__ == "__main__":
     manager = Manager()
     print("CREATED MANAGER")
     runIP(manager)
+
+    """version 1
     prev_diff = 0
     while True:
         sleep(0.001)
-        prev_diff = drive(prev_diff)
+        prev_diff = drive(prev_diff)"""
+
+    # version 2
+    keyinput.PressKey(keyinput.FORWARD)
+    while True:
+        sleep(0.0001)
+        drive_v2()

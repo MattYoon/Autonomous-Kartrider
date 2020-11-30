@@ -158,9 +158,9 @@ class KartEnv(gym.Env):
 
         observation = np.array([diff, cur_speed, road_diff])
 
-        while True:
+        while True:     # 시간 Delay줌
             end_time = time.time()
-            if end_time - start_step > 0.0001:
+            if end_time - start_step > 0.005:
                 break
 
         self.pre_speed = cur_speed
