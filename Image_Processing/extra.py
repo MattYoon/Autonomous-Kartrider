@@ -3,6 +3,8 @@ import numpy as np
 import os
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 VALUE1 = np.array([0, 220, 200])
 VALUE2 = np.array([0, 255, 255])
 def isReverse(img):
@@ -17,7 +19,24 @@ def isReverse(img):
     return False
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+prev_roi = None
+def isBoost(roi):
+    global prev_roi
+
+    roi_gr = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    _, roi_bin = cv2.threshold(roi_gr, 170, 255, cv2.THRESH_BINARY)
+
+    if prev_roi is not None:
+        diff = cv2.bitwise_and(roi_bin, prev_roi)
+        diff_cnt = cv2.countNonZero(diff)
+        prev_roi = roi_bin
+        if diff_cnt > 300:
+            return True
+        else:
+            return False
+    prev_roi = roi_bin
+    return False
+
 
 LAP2 = None
 def loadLap():

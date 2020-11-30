@@ -3,7 +3,7 @@ from Image_Processing.countdown import loadStart, checkStart
 from Image_Processing.minimap import getMinimapData
 from Image_Processing.minimap_handler import resetValues
 from Image_Processing.speed import loadSpeed, getSpeedData
-from Image_Processing.extra import isReverse, loadLap, checkLap
+from Image_Processing.extra import isReverse, loadLap, checkLap, isBoost
 from reset_env import isReset, initReset, checkIFMenu
 import cv2
 import time as T
@@ -51,6 +51,8 @@ def ipMain(d):
             d['reverse'] = isReverse(sign_area)
             lap_area = img[21:79, 923:972]
             d['lap2'] = checkLap(lap_area)
+            boost_area = img[8:66, 101:159]
+            d['boost'] = isBoost(boost_area)
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 cv2.destroyAllWindows()
                 quit("Terminated by User")
@@ -83,6 +85,7 @@ def resetData():
     shared_dict['reverse'] = False
     shared_dict['simple_map'] = 0
     shared_dict['lap2'] = False
+    shared_dict['boost'] = False
 
 
 # 아래의 모든 좌표는 튜플 (x, y) 형식
@@ -115,6 +118,12 @@ def getSimpleMap():
 def isLap2():  # lap2가 되면 True로 변경됨
     return shared_dict['lap2']  # bool
 
+
+def getBoost():  # booster가 있으면 True
+    return shared_dict['boost']  # bool
+
+
+
 loadData()
 shared_dict = {}
 #simple_map = None
@@ -137,5 +146,6 @@ if __name__ == "__main__":
     print("CREATED MANAGER")
     runIP(manager)
     while True:
-        print(isLap2())
+        pass
+        print(getBoost())
 
