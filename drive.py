@@ -35,6 +35,9 @@ def drive_v2(control_by_hand=True):
     diff = getXdiff()
     speed = getSpeed()
     points = getPoints()
+    edge =
+
+    car_shifted = func.get_shifted(func.get_player_detailed_pos())
 
     val = getPlayerEdge()
     vertex = getPlayerVertex()

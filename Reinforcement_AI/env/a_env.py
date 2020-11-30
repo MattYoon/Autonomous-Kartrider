@@ -108,7 +108,8 @@ class KartEnv(gym.Env):
         road_diff = self.get_road_diff(road_points)
         reverse = ip.getReverse()
         cur_speed = ip.getSpeed()
-        car_shifted = func.get_shifted(func.get_player_detailed_pos(ip.getPlayerEdge(), player_pos))
+        car_edge = ip.getPlayerEdge()
+        car_shifted = func.get_shifted(func.get_player_detailed_pos(car_edge[0], player_pos))
 
         return road_center, road_points, player_pos, road_diff, reverse, cur_speed, car_shifted
 
