@@ -43,7 +43,7 @@ def launchAgent(env_name: int, model_name: str):
 if __name__ == "__main__":
 
     # 에이전트 및 환경 설정
-    agent = "DQN"
+    agent = "PPO2"
     env = 1
     """
     env: 불러올 환경의 이름입니다. (int)

@@ -31,32 +31,24 @@ def drive(prev):
         keyinput.PressKey(keyinput.FORWARD)
     return diff
 
-def drive_v2(control_by_hand=True):
+def drive_v2():
     diff = getXdiff()
     speed = getSpeed()
     points = getPoints()
-    edge =
+    edge = getPlayerEdge()
 
-    car_shifted = func.get_shifted(func.get_player_detailed_pos())
-
-    val = getPlayerEdge()
-    vertex = getPlayerVertex()
-    result = func.get_player_detailed_pos(val[0], vertex)
-    # print(val[0])
-    print("player_vertex : ", func.get_player_detailed_pos(val[0], vertex), "    real_vertex : ", vertex)
-    print("Shifted : ", func.get_shifted(result))
-    sleep(1)
-
+    car_shifted = func.get_shifted(func.get_player_detailed_pos(edge[0], getPlayerVertex()))
     way_width = points[3][0] - points[2][0]
 
-    if speed < 100:
+    # diff가 음수일땐 차가 좌측에 있을 때때
+
+   if speed < 100:
         speed_time_val = 1
     else:
         speed_time_val = 100 / speed
 
     print(way_width * 0.2, diff)
 
-    if not control_by_hand:
         if diff < 0 and way_width * 0.2 < abs(diff):
             keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.008) / speed_time_val)
         elif diff > 0 and way_width * 0.2 < abs(diff):

@@ -34,6 +34,8 @@ def get_player_detailed_pos(locations, vertex):
     """
 
     # print(len(locations))
+    vertex = [vertex[0], vertex[1]]
+    print(vertex)
 
     x = locations[0][0][0]
     y = locations[0][0][1]
@@ -87,15 +89,17 @@ def get_player_detailed_pos(locations, vertex):
     ]
     dist = 10000
     where = 0
-    for i in range(len(diff)):
-        if diff[i] < dist:
-            dist = diff[i]
-            where = i
+    for j in range(len(diff)):
+        if diff[j] < dist:
+            dist = diff[j]
+            where = j
     removed = removal[where]
+    print("removed : ", removed)
+    print(removed[0][0])
 
     distance = sorted([(distance_twopoint(vertex, removed[0]), removed[0]),
                        (distance_twopoint(vertex, removed[1]), removed[1]),
-                       (distance_twopoint(vertex, removed[2]), removed[2])])
+                       (distance_twopoint(vertex, removed[2]), removed[2])], key=lambda x: x[0])
 
     return [distance[0][1], distance[1][1], distance[2][1]]
 

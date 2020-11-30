@@ -101,19 +101,6 @@ class KartEnv(gym.Env):
         self.speed_queue.append(-10)
         self.pre_speed = -10
 
-    def observation(self):
-        road_center = ip.getOrigin()
-        road_points = ip.getPoints()
-        player_pos = ip.getPlayerVertex()
-        road_diff = self.get_road_diff(road_points)
-        reverse = ip.getReverse()
-        cur_speed = ip.getSpeed()
-        car_edge = ip.getPlayerEdge()
-        car_shifted = func.get_shifted(func.get_player_detailed_pos(car_edge[0], player_pos))
-
-        return road_center, road_points, player_pos, road_diff, reverse, cur_speed, car_shifted
-
-
     def reset(self):
         # 에피소드의 시작에 불려지며, observation을 돌려준다
         print("reset called")
@@ -124,17 +111,20 @@ class KartEnv(gym.Env):
         func.release_all()
         reset_env.manualReset()
         ip.ipCountdown()
+        road_center = ip.getOrigin()
+        road_points = ip.getPoints()
+        player_pos = ip.getPlayerVertex()
+        road_diff = self.get_road_diff(road_points)
 
         # get_observation
         # while reset_env.isReset():
         #     i = 0
-        road_center, road_points, player_pos, road_diff, _, _, car_shifted = self.observation()
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
-        observation = np.array([diff, -10, road_diff, car_shifted])
+        observation = np.array([diff, -10, road_diff, 0])
         # print(observation, self.speed_queue)
         return observation
 
@@ -144,7 +134,15 @@ class KartEnv(gym.Env):
 
         start_step = time.time()
         self.pre_direction = change_direction(self.pre_direction, action)
-        road_center, road_points, player_pos, road_diff, reverse, cur_speed, car_shifted = self.observation()
+        road_center = ip.getOrigin()
+        road_points = ip.getPoints()
+        player_pos = ip.getPlayerVertex()
+        road_diff = self.get_road_diff(road_points)
+        reverse = ip.getReverse()
+        cur_speed = ip.getSpeed()
+        car_edge = ip.getPlayerEdge()
+        print("in step : ", player_pos)
+        car_shifted = func.get_shifted(func.get_player_detailed_pos(car_edge[0], player_pos))
 
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
@@ -162,7 +160,7 @@ class KartEnv(gym.Env):
         reward_speed_diff = self.reward_speed_diff()
         reward_backward = self.reward_going_back(reverse)
 
-        observation = np.array([diff, cur_speed, road_diff, car_shifted])
+        observation = np.array([diff, cur_speed, road_diff, min(car_shifted * 34, 200)])
 
         while True:     # 시간 Delay줌
             end_time = time.time()
@@ -187,7 +185,7 @@ class KartEnv(gym.Env):
         way_width = func.distance_twopoint(waypoints[2], waypoints[3])
         wayup_width = func.distance_twopoint(waypoints[0], waypoints[1])
         diff = abs(reddot[0] - player[0])
-        print("way_width : ", way_width, " wayup_width : ", wayup_width, " diff : ", diff, " road_diff : ", road_diff)
+        print("way_width : ", way_width, " wayup_width : ", wayup_width, " diff : ", diff, " road_diff : ", road_diff, "\n\n")
         if wayup_width * 3 > way_width and diff < way_width * 0.50:    # 시작점 기준
             return 2, diff
         elif diff < way_width * 0.50 and road_diff < 30:      # 길이 좁고 직선형일떄
