@@ -95,18 +95,22 @@ class KartEnv(gym.Env):
 
         # Describe Observation space
         # Box(3, ) 정도? -> 파란선과 플레이어의 거리, 속도, 앞으로의 길의 방향성 (어느쪽으로 휘어있는지)
-        self.observation_space = spaces.Box(low=0, high=200, shape=(3,), dtype=np.int32)
+        self.observation_space = spaces.Box(low=0, high=200, shape=(4,), dtype=np.int32)
 
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
+        self.pre_speed = -10
 
     def observation(self):
         road_center = ip.getOrigin()
         road_points = ip.getPoints()
         player_pos = ip.getPlayerVertex()
         road_diff = self.get_road_diff(road_points)
+        reverse = ip.getReverse()
+        cur_speed = ip.getSpeed()
+        car_shifted = func.get_shifted(func.get_player_detailed_pos(ip.getPlayerEdge(), player_pos))
 
-        return road_center, road_points, player_pos, road_diff
+        return road_center, road_points, player_pos, road_diff, reverse, cur_speed, car_shifted
 
 
     def reset(self):
@@ -116,23 +120,20 @@ class KartEnv(gym.Env):
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
 
-        release_onekey(keyinput.FORWARD)
-        release_onekey(keyinput.BACK)
-        release_onekey(keyinput.RIGHT)
-        release_onekey(keyinput.LEFT)
+        func.release_all()
         reset_env.manualReset()
         ip.ipCountdown()
 
         # get_observation
         # while reset_env.isReset():
         #     i = 0
-        road_center, road_points, player_pos, road_diff = self.observation()
+        road_center, road_points, player_pos, road_diff, _, _, car_shifted = self.observation()
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
-        observation = np.array([diff, -10, road_diff])
+        observation = np.array([diff, -10, road_diff, car_shifted])
         # print(observation, self.speed_queue)
         return observation
 
@@ -142,17 +143,17 @@ class KartEnv(gym.Env):
 
         start_step = time.time()
         self.pre_direction = change_direction(self.pre_direction, action)
-
-        reverse = ip.getReverse()
-        cur_speed = ip.getSpeed()
-
-        road_center, road_points, player_pos, road_diff = self.observation()
+        road_center, road_points, player_pos, road_diff, reverse, cur_speed, car_shifted = self.observation()
 
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
             print("Episode Ended, with return state True")
             return [0, 0, 0], -20, True, {}
+        if ip.isLap2():     # 두 번째 맵에 도달하면 게임 종료 및 로그 남김
+            with open("success_log.txt", "w", encoding="utf8") as file:
+                file.writelines("한 바퀴 주행 성공!")
+            return [0, 0, 0], 1000, True, {}
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
@@ -160,23 +161,13 @@ class KartEnv(gym.Env):
         reward_speed_diff = self.reward_speed_diff()
         reward_backward = self.reward_going_back(reverse)
 
-        observation = np.array([diff, cur_speed, road_diff])
-
-
-         # TEST
-        val = ip.getPlayerEdge()
-        print(type(val), val.shape)
-        print("val", val[0])
-        values = func.get_player_detailed_pos(val[0])
-        print("Values : ", values)
+        observation = np.array([diff, cur_speed, road_diff, car_shifted])
 
         while True:     # 시간 Delay줌
             end_time = time.time()
             if end_time - start_step > 0.005:
                 break
-
         self.pre_speed = cur_speed
-
         # print(observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]})
         return observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]}
 
