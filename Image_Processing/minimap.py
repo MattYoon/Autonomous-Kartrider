@@ -64,4 +64,4 @@ def getMinimapData(minimap):
     cv2.fillPoly(simple_map, [points_arr], (255, 0, 0))
     cv2.drawContours(simple_map, player_con, 0, (0, 0, 255), -1)
     #cv2.imshow('simple_map', simple_map)
-    return points, origin, vertex, simple_map
+    return points, origin, player_con, vertex, simple_map

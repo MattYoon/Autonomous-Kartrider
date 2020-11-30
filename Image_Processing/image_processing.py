@@ -10,6 +10,7 @@ import time as T
 import multiprocessing
 import numpy as np
 
+
 # 영상처리 main
 
 
@@ -17,6 +18,7 @@ def loadData():
     loadStart()
     loadSpeed()
     loadLap()
+
 
 def ipCountdown():
     print("Image Processing Running.. Waiting for Start Cue")
@@ -44,7 +46,7 @@ def ipMain(d):
                 break
             checkIFMenu(img[393:394, 437:438])
             minimap = img[217:319, 252:431]
-            d['points'], d['origin'], d['player_vertex'], d['simple_map_pre'] = getMinimapData(minimap)
+            d['points'], d['origin'], d['player_edge'], d['player_vertex'], d['simple_map_pre'] = getMinimapData(minimap)
             d['speed'] = getSpeedData(img)
             drawSpeedGauge(d)
             sign_area = img[257:261, 510:514]
@@ -60,11 +62,13 @@ def ipMain(d):
                 cv2.destroyAllWindows()
                 initReset()
                 resetValues()
-                #releaseAllKeys()
+                # releaseAllKeys()
                 break
 
 
 BUFFER = np.full((40, 179, 3), 255, dtype=np.uint8)
+
+
 def drawSpeedGauge(d):
     global simple_map
     speed_norm = d['speed'] / 250
@@ -80,6 +84,59 @@ def resetData():
     global shared_dict
     shared_dict['points'] = (35, 0), (146, 0), (33, 53), (147, 53)
     shared_dict['origin'] = (90, 53)
+    shared_dict['player_edge'] = None
+    # shared_dict['player_edge'] = [[[89, 55]],
+    #                               [[89, 57]],
+    #                               [[91, 57]],
+    #                               [[92, 58]],
+    #                               [[91, 59]],
+    #                               [[88, 59]],
+    #                               [[87, 58]],
+    #                               [[86, 59]],
+    #                               [[86, 60]],
+    #                               [[82, 64]],
+    #                               [[82, 65]],
+    #                               [[78, 69]],
+    #                               [[78, 70]],
+    #                               [[75, 73]],
+    #                               [[75, 74]],
+    #                               [[68, 81]],
+    #                               [[68, 82]],
+    #                               [[66, 84]],
+    #                               [[66, 86]],
+    #                               [[67, 87]],
+    #                               [[69, 87]],
+    #                               [[71, 85]],
+    #                               [[74, 85]],
+    #                               [[75, 84]],
+    #                               [[78, 84]],
+    #                               [[79, 83]],
+    #                               [[84, 83]],
+    #                               [[85, 82]],
+    #                               [[95, 82]],
+    #                               [[96, 83]],
+    #                               [[100, 83]],
+    #                               [[101, 84]],
+    #                               [[106, 84]],
+    #                               [[107, 85]],
+    #                               [[109, 85]],
+    #                               [[111, 87]],
+    #                               [[113, 87]],
+    #                               [[113, 84]],
+    #                               [[112, 83]],
+    #                               [[112, 81]],
+    #                               [[105, 74]],
+    #                               [[105, 73]],
+    #                               [[102, 70]],
+    #                               [[102, 69]],
+    #                               [[98, 65]],
+    #                               [[98, 64]],
+    #                               [[94, 60]],
+    #                               [[94, 59]],
+    #                               [[93, 58]],
+    #                               [[92, 58]],
+    #                               [[91, 57]],
+    #                               [[91, 55]]]
     shared_dict['player_vertex'] = (89, 55)
     shared_dict['speed'] = 0
     shared_dict['reverse'] = False
@@ -94,8 +151,12 @@ def getPoints():  # 파란점 4개
     return shared_dict['points']  # (l1, r1, l2, r2)  l1 -> 왼쪽 위, r2 -> 오른쪽 아래
 
 
-def getOrigin():   # 빨간점 1개
+def getOrigin():  # 빨간점 1개
     return shared_dict['origin']
+
+
+def getPlayerEdge():
+    return shared_dict['player_edge']
 
 
 def getPlayerVertex():  # 초록점 1개
@@ -115,6 +176,7 @@ def getSimpleMap():
     # 142 -> y축, 179 -> x축, 3 -> BGR
     # (255, 255, 255) -> white, (255, 0, 0) -> blue, (0, 255, 0) -> green (0, 0, 255) -> red
 
+
 def isLap2():  # lap2가 되면 True로 변경됨
     return shared_dict['lap2']  # bool
 
@@ -123,10 +185,11 @@ def getBoost():  # booster가 있으면 True
     return shared_dict['boost']  # bool
 
 
-
 loadData()
 shared_dict = {}
-#simple_map = None
+
+
+# simple_map = None
 def runIP(manager):
     global shared_dict
     print("IMAGE PROCESSING")
@@ -141,11 +204,11 @@ def runIP(manager):
 
 if __name__ == "__main__":
     from multiprocessing import Manager
+
     print("TRYING TO CREATE MANAGER")
     manager = Manager()
     print("CREATED MANAGER")
     runIP(manager)
     while True:
         pass
-        print(getBoost())
-
+        print(getPlayerEdge())
