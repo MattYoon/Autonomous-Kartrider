@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     # 에이전트 및 환경 설정
     agent = "DQN"
-    env = 3
+    env = 1
     """
     env: 불러올 환경의 이름입니다. (int)
         1 : 미니맵 이미지를 사용하지 않은, 점 사이의 거리 계산을 한 환경입니다.
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         다른 값(기본) : PPO2 모델을 불러옵니다.
     """
 
-    if env==2:#1 <= env <= 2:
+    if env == 2:
         launchAgent(env, agent)
     else:
         from Image_Processing.image_processing import runIP

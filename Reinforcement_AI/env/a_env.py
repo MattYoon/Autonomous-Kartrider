@@ -100,6 +100,15 @@ class KartEnv(gym.Env):
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
 
+    def observation(self):
+        road_center = ip.getOrigin()
+        road_points = ip.getPoints()
+        player_pos = ip.getPlayerVertex()
+        road_diff = self.get_road_diff(road_points)
+
+        return road_center, road_points, player_pos, road_diff
+
+
     def reset(self):
         # 에피소드의 시작에 불려지며, observation을 돌려준다
         print("reset called")
@@ -117,10 +126,7 @@ class KartEnv(gym.Env):
         # get_observation
         # while reset_env.isReset():
         #     i = 0
-        road_center = ip.getOrigin()
-        road_points = ip.getPoints()
-        player_pos = ip.getPlayerVertex()
-        road_diff = self.get_road_diff(road_points)
+        road_center, road_points, player_pos, road_diff = self.observation()
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
@@ -137,18 +143,16 @@ class KartEnv(gym.Env):
         start_step = time.time()
         self.pre_direction = change_direction(self.pre_direction, action)
 
-        road_center = ip.getOrigin()
-        road_points = ip.getPoints()
-        player_pos = ip.getPlayerVertex()
         reverse = ip.getReverse()
         cur_speed = ip.getSpeed()
-        road_diff = self.get_road_diff(road_points)
+
+        road_center, road_points, player_pos, road_diff = self.observation()
+
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
             print("Episode Ended, with return state True")
             return [0, 0, 0], -20, True, {}
-
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
@@ -158,6 +162,14 @@ class KartEnv(gym.Env):
 
         observation = np.array([diff, cur_speed, road_diff])
 
+
+         # TEST
+        val = ip.getPlayerEdge()
+        print(type(val), val.shape)
+        print("val", val[0])
+        values = func.get_player_detailed_pos(val[0])
+        print("Values : ", values)
+
         while True:     # 시간 Delay줌
             end_time = time.time()
             if end_time - start_step > 0.005:
@@ -165,7 +177,7 @@ class KartEnv(gym.Env):
 
         self.pre_speed = cur_speed
 
-        print(observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]})
+        # print(observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]})
         return observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]}
 
     def render(self, mode='human'):

@@ -1,7 +1,8 @@
 from time import sleep
 
+import Reinforcement_AI.func as func
 import keyinput
-from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP, getSpeed, getPoints
+from Image_Processing.image_processing import getPlayerVertex, getOrigin, runIP, getSpeed, getPoints, getPlayerEdge
 from reset_env import releaseAllKeys
 
 
@@ -34,6 +35,12 @@ def drive_v2():
     diff = getXdiff()
     speed = getSpeed()
     points = getPoints()
+
+    val = getPlayerEdge()
+    # print(val[0])
+    print(func.get_player_detailed_pos(val[0]), getPlayerVertex())
+
+    sleep(1)
 
     way_width = points[3][0] - points[2][0]
 

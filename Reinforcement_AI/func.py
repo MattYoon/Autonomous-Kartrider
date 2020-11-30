@@ -33,34 +33,36 @@ def get_player_detailed_pos(locations):
     :return:
     """
 
-    x = locations[0][0]
-    y = locations[0][1]
+    # print(len(locations))
+
+    x = locations[0][0][0]
+    y = locations[0][0][1]
 
     leftx = x
-    leftpoint = locations[0]
+    leftpoint = locations[0][0]
 
     rightx = x
-    rightpoint = locations[0]
+    rightpoint = locations[0][0]
 
     topy = y
-    toppoint = locations[0]
+    toppoint = locations[0][0]
 
     bottomy = y
-    bottompoint = locations[0]
+    bottompoint = locations[0][0]
 
-    for point in locations:
-        if point[0] < leftx:
-            leftx = point[0]
-            leftpoint = point
-        if point[0] > rightx:
-            rightx = point[0]
-            rightpoint = point
-        if point[1] > topy:
-            topy = point[1]
-            toppoint = point
-        if point[1] < bottomy:
-            bottomy = point[1]
-            bottompoint = point
+    for i in range(len(locations)):
+        if locations[i][0][0] < leftx:
+            leftx = locations[i][0][0]
+            leftpoint = locations[i][0]
+        if locations[i][0][0] > rightx:
+            rightx = locations[i][0][0]
+            rightpoint = locations[i][0]
+        if locations[i][0][1] > topy:
+            topy = locations[i][0][1]
+            toppoint = locations[i][0]
+        if locations[i][0][1] < bottomy:
+            bottomy = locations[i][0][1]
+            bottompoint = locations[i][0]
 
     return leftpoint, rightpoint, toppoint, bottompoint
 
