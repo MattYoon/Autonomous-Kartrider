@@ -27,7 +27,7 @@ def release_all():
     keyinput.ReleaseKey(keyinput.RIGHT)
 
 
-def get_player_detailed_pos(locations):
+def get_player_detailed_pos(locations, vertex):
     """
     :param locations: 플레이어의 테두리를 이루는 점집합
     :return:
@@ -64,5 +64,42 @@ def get_player_detailed_pos(locations):
             bottomy = locations[i][0][1]
             bottompoint = locations[i][0]
 
-    return leftpoint, rightpoint, toppoint, bottompoint
+    diff = [
+        distance_twopoint(leftpoint, rightpoint),
+        distance_twopoint(leftpoint, toppoint),
+        distance_twopoint(leftpoint, bottompoint),
+        distance_twopoint(rightpoint, toppoint),
+        distance_twopoint(rightpoint, bottompoint),
+        distance_twopoint(toppoint, bottompoint)
+    ]
 
+    removed1 = [rightpoint, toppoint, bottompoint]      # left removed
+    removed2 = [leftpoint, toppoint, bottompoint]       # right removed
+    removed3 = [leftpoint, rightpoint, bottompoint]     # top removed
+
+    removal = [
+        removed1,
+        removed1,
+        removed1,
+        removed2,
+        removed2,
+        removed3
+    ]
+    dist = 10000
+    where = 0
+    for i in range(len(diff)):
+        if diff[i] < dist:
+            dist = diff[i]
+            where = i
+    removed = removal[where]
+
+    distance = sorted([(distance_twopoint(vertex, removed[0]), removed[0]),
+                       (distance_twopoint(vertex, removed[1]), removed[1]),
+                       (distance_twopoint(vertex, removed[2]), removed[2])])
+
+    return [distance[0][1], distance[1][1], distance[2][1]]
+
+
+def get_shifted(point3):
+
+    return -1 * (point3[1][1] - point3[2][1]) / (point3[1][0] - point3[2][0])

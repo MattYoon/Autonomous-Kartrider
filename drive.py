@@ -31,15 +31,17 @@ def drive(prev):
         keyinput.PressKey(keyinput.FORWARD)
     return diff
 
-def drive_v2():
+def drive_v2(control_by_hand=True):
     diff = getXdiff()
     speed = getSpeed()
     points = getPoints()
 
     val = getPlayerEdge()
+    vertex = getPlayerVertex()
+    result = func.get_player_detailed_pos(val[0], vertex)
     # print(val[0])
-    print(func.get_player_detailed_pos(val[0]), getPlayerVertex())
-
+    print("player_vertex : ", func.get_player_detailed_pos(val[0], vertex), "    real_vertex : ", vertex)
+    print("Shifted : ", func.get_shifted(result))
     sleep(1)
 
     way_width = points[3][0] - points[2][0]
@@ -51,10 +53,11 @@ def drive_v2():
 
     print(way_width * 0.2, diff)
 
-    if diff < 0 and way_width * 0.2 < abs(diff):
-        keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.008) / speed_time_val)
-    elif diff > 0 and way_width * 0.2 < abs(diff):
-        keyinput.PressAndRelease(keyinput.LEFT, seconds=abs(diff * 0.008) / speed_time_val)
+    if not control_by_hand:
+        if diff < 0 and way_width * 0.2 < abs(diff):
+            keyinput.PressAndRelease(keyinput.RIGHT, seconds=abs(diff * 0.008) / speed_time_val)
+        elif diff > 0 and way_width * 0.2 < abs(diff):
+            keyinput.PressAndRelease(keyinput.LEFT, seconds=abs(diff * 0.008) / speed_time_val)
 
 
 
