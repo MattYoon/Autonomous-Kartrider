@@ -21,6 +21,10 @@ def launchAgent(env_name: int, model_name: str):
         from Reinforcement_AI.env.d_image_env import DetailedMiniMapEnv as DetailedMiniMapEnv1
         kart_env = DetailedMiniMapEnv1()
         policy = "CnnPolicy"
+    elif env_name == 3:
+        from Reinforcement_AI.env.a_env2 import KartEnv
+        kart_env = KartEnv()
+        policy = "MlpPolicy"
     else: #env_name == "detailed_minimap_enhanced" or env_name == "4":
         from Reinforcement_AI.env.e_enhanced_image_env import DetailedMiniMapEnv as DetailedMiniMapEnv2
         kart_env = DetailedMiniMapEnv2()
@@ -44,11 +48,12 @@ if __name__ == "__main__":
 
     # 에이전트 및 환경 설정
     agent = "PPO2"
-    env = 1
+    env = 3
     """
     env: 불러올 환경의 이름입니다. (int)
         1 : 미니맵 이미지를 사용하지 않은, 점 사이의 거리 계산을 한 환경입니다.
         2 : 미니맵 이미지를 사용하고, 보상을 업데이트한 모델입니다.
+        3 : 1의 버전에서 개선된 모델입니다.
         다른 값(기본) : 현재 쓰는 모델입니다. 미니맵 이미지를 사용하고, 보상을 다시 업데이트한 모델입니다.
     agent: 설정할 모델의 이름입니다.
         DQN : DQN 모델을 불러옵니다.
