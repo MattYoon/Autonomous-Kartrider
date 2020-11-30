@@ -46,7 +46,7 @@ def ipMain(d):
                 break
             checkIFMenu(img[393:394, 437:438])
             minimap = img[217:319, 252:431]
-            d['points'], d['origin'], d['player_edge'], d['player_vertex'], d['simple_map_pre'] = getMinimapData(minimap)
+            d['points'], d['origin'], d['origin2'], d['player_edge'], d['player_vertex'], d['simple_map_pre'] = getMinimapData(minimap)
             d['speed'] = getSpeedData(img)
             drawSpeedGauge(d)
             sign_area = img[257:261, 510:514]
@@ -84,6 +84,7 @@ def resetData():
     global shared_dict
     shared_dict['points'] = (35, 0), (146, 0), (33, 53), (147, 53)
     shared_dict['origin'] = (90, 53)
+    shared_dict['origin2'] = (90, 0)
     shared_dict['player_edge'] = None
     shared_dict['player_vertex'] = (89, 55)
     shared_dict['speed'] = 0
@@ -101,6 +102,10 @@ def getPoints():  # 파란점 4개
 
 def getOrigin():  # 빨간점 1개
     return shared_dict['origin']
+
+
+def getOrigin2():
+    return shared_dict['origin2']
 
 
 def getPlayerEdge():  # 플레이어 아이콘 테두리
@@ -158,5 +163,4 @@ if __name__ == "__main__":
     print("CREATED MANAGER")
     runIP(manager)
     while True:
-        pass
-        print(getPlayerEdge())
+        print(getOrigin2())

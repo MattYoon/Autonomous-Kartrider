@@ -18,8 +18,10 @@ def getPathData(map_up):
     for point in points:
         cv2.circle(map_warped, point, 5, (255, 0, 0), 2)
     origin = mh.calcOrigin(contours)
+    origin2 = mh.calcOrigin2(contours)
     cv2.circle(map_warped, origin, 5, (0, 0, 255), 2)
-    return points, origin
+    cv2.circle(map_warped, origin2, 5, (0, 0, 255), 2)
+    return points, origin, origin2
 
 
 VALUE1 = np.array([2, 190, 130])
@@ -51,7 +53,7 @@ def getMinimapData(minimap):
     global map_warped
     simple_map = np.full_like(minimap, 255)
     map_warped = cv2.warpPerspective(minimap, np.float32(MATRIX), (minimap.shape[1], minimap.shape[0]))
-    points, origin = getPathData(map_warped[:54])
+    points, origin, origin2 = getPathData(map_warped[:54])
     player_con, vertex = getPlayerData(map_warped[54:])
     cv2.imshow('minimap', map_warped)
     # cv2.line(simple_map, points[0], points[1], (255, 0, 0), 4)
@@ -64,4 +66,4 @@ def getMinimapData(minimap):
     cv2.fillPoly(simple_map, [points_arr], (255, 0, 0))
     cv2.drawContours(simple_map, player_con, 0, (0, 0, 255), -1)
     #cv2.imshow('simple_map', simple_map)
-    return points, origin, player_con, vertex, simple_map
+    return points, origin, origin2, player_con, vertex, simple_map

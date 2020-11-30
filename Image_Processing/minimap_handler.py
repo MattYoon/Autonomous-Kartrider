@@ -65,6 +65,23 @@ def calcOrigin(contours):
     return origin
 
 
+prev_origin2 = (90, 0)
+def calcOrigin2(contours):
+    global prev_origin2
+    try:
+        bottom_edge = contours[0][np.where(contours[0][:, 0, 1] == 0)]
+        x_values = [entry[0][0] for entry in bottom_edge]
+        x_values.sort()
+        medium = int(len(x_values)/2)
+        origin = (x_values[medium], 0)
+    except IndexError:
+        return prev_origin2
+    except ValueError:
+        return prev_origin2
+    prev_origin2 = origin
+    return origin
+
+
 prev_vertex = (89, 55)
 def getVertex(contours):
     global prev_vertex
