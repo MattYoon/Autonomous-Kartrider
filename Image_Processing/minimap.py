@@ -14,14 +14,14 @@ def getPathData(map_up):
     map_blurred = cv2.GaussianBlur(map_gray, (21, 21), 0)
     _, map_thr = cv2.threshold(map_blurred, 145, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(map_thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    points = mh.getPoints(contours)  # (l1, r1, l2, r2)
+    points, origin1, origin2 = mh.getPoints(contours)  # (l1, r1, l2, r2)
     for point in points:
         cv2.circle(map_warped, point, 5, (255, 0, 0), 2)
-    origin = mh.calcOrigin(contours)
-    origin2 = mh.calcOrigin2(contours)
-    cv2.circle(map_warped, origin, 5, (0, 0, 255), 2)
+    #origin = mh.calcOrigin(contours)
+    #origin2 = mh.calcOrigin2(contours)
+    cv2.circle(map_warped, origin1, 5, (0, 0, 255), 2)
     cv2.circle(map_warped, origin2, 5, (0, 0, 255), 2)
-    return points, origin, origin2
+    return points, origin1, origin2
 
 
 VALUE1 = np.array([2, 190, 130])

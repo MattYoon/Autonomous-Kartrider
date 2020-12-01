@@ -41,45 +41,54 @@ def getL2R2(contours):
     return l2, r2
 
 
+def calcOrigin(left, right):
+    x = (left[0] + right[0])//2
+    y = (left[1] + right[1])//2
+    origin = (x, y)
+    return origin
+
+
 def getPoints(contours):
     l1, r1 = getL1R1(contours)
     l2, r2 = getL2R2(contours)
     points = (l1, r1, l2, r2)
-    return points
+    origin1 = calcOrigin(l1, r1)
+    origin2 = calcOrigin(l1, r1)
+    return points, origin1, origin2
 
 
-prev_origin = (90, 53)
-def calcOrigin(contours):
-    global prev_origin
-    try:
-        bottom_edge = contours[0][np.where(contours[0][:, 0, 1] == 53)]
-        x_values = [entry[0][0] for entry in bottom_edge]
-        x_values.sort()
-        medium = int(len(x_values)/2)
-        origin = (x_values[medium], 53)
-    except IndexError:
-        return prev_origin
-    except ValueError:
-        return prev_origin
-    prev_origin = origin
-    return origin
+# prev_origin = (90, 53)
+# def calcOrigin(contours):
+#     global prev_origin
+#     try:
+#         bottom_edge = contours[0][np.where(contours[0][:, 0, 1] == 53)]
+#         x_values = [entry[0][0] for entry in bottom_edge]
+#         x_values.sort()
+#         medium = int(len(x_values)/2)
+#         origin = (x_values[medium], 53)
+#     except IndexError:
+#         return prev_origin
+#     except ValueError:
+#         return prev_origin
+#     prev_origin = origin
+#     return origin
 
 
-prev_origin2 = (90, 0)
-def calcOrigin2(contours):
-    global prev_origin2
-    try:
-        bottom_edge = contours[0][np.where(contours[0][:, 0, 1] == 0)]
-        x_values = [entry[0][0] for entry in bottom_edge]
-        x_values.sort()
-        medium = int(len(x_values)/2)
-        origin = (x_values[medium], 0)
-    except IndexError:
-        return prev_origin2
-    except ValueError:
-        return prev_origin2
-    prev_origin2 = origin
-    return origin
+# prev_origin2 = (90, 0)
+# def calcOrigin2(contours):
+#     global prev_origin2
+#     try:
+#         bottom_edge = contours[0][np.where(contours[0][:, 0, 1] == 0)]
+#         x_values = [entry[0][0] for entry in bottom_edge]
+#         x_values.sort()
+#         medium = int(len(x_values)/2)
+#         origin = (x_values[medium], 0)
+#     except IndexError:
+#         return prev_origin2
+#     except ValueError:
+#         return prev_origin2
+#     prev_origin2 = origin
+#     return origin
 
 
 prev_vertex = (89, 55)
