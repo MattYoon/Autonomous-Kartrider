@@ -45,6 +45,7 @@ def calcOrigin(left, right):
     x = (left[0] + right[0])//2
     y = (left[1] + right[1])//2
     origin = (x, y)
+    print(origin)
     return origin
 
 
@@ -52,8 +53,10 @@ def getPoints(contours):
     l1, r1 = getL1R1(contours)
     l2, r2 = getL2R2(contours)
     points = (l1, r1, l2, r2)
-    origin1 = calcOrigin(l1, r1)
     origin2 = calcOrigin(l1, r1)
+    origin1 = calcOrigin(l2, r2)
+    print("origin1", origin1)
+    print("origin2", origin2)
     return points, origin1, origin2
 
 

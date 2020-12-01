@@ -163,4 +163,4 @@ if __name__ == "__main__":
     print("CREATED MANAGER")
     runIP(manager)
     while True:
-        print(getOrigin2())
+        pass
