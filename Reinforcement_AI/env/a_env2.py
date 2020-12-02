@@ -89,6 +89,9 @@ class KartEnv(gym.Env):
         self.pre_speed = -10
 
     def reset(self):
+
+        time1 = datetime.datetime.now()
+        
         # 에피소드의 시작에 불려지며, observation을 돌려준다
         print("reset called")
         self.speed_queue.clear()
@@ -109,6 +112,9 @@ class KartEnv(gym.Env):
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
         observation = np.array([diff, -10, road_diff, 0, 100])
+
+        print(datetime.datetime.now() - time1)
+        exit(1)
         # print(observation, self.speed_queue)
         return observation
 

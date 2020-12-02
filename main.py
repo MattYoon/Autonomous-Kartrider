@@ -36,9 +36,12 @@ def launchAgent(env_name: int, model_name: str):
     elif model_name == "HER":
         model = HER(policy=policy, env=kart_env, model_class=DQN, verbose=1)
     else: # model_name == "PPO2"
-        model = PPO2(policy=policy, env=kart_env, verbose=1)
+        model = PPO2(policy=policy, learning_rate=0.0001, env=kart_env, verbose=1)
 
 
+    #model.load("3_PPO2_52")
+    #model.set_env(env=kart_env)
+    
     for i in range(1000):
         model.learn(total_timesteps=12500)
         model.save(str(env_name) + "_" + model_name + "_" + str(i+1))
