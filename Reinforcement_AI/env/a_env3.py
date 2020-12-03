@@ -69,6 +69,7 @@ class KartEnv(gym.Env):
     """Custom ENV follows gym interface"""
     metadata = {'render.modes': ['human']}
     pre_direction = 4
+    pre_boost = False
     speed_queue = deque()
 
     def __init__(self):
@@ -81,8 +82,8 @@ class KartEnv(gym.Env):
         self.action_space = spaces.Discrete(3)
 
         # Describe Observation space
-        # Box(5, ) 정도? -> [ 중앙의 정도, 속도, 길의 커브정도, 차의 꺾인정도, 길의 꺾인정도] (어느쪽으로 휘어있는지)
-        self.observation_space = spaces.Box(low=0, high=1, shape=(5,), dtype=np.float)
+        # Box(6, ) 정도? -> [ 중앙의 정도, 속도, 길의 커브정도, 차의 꺾인정도, 길의 꺾인정도, 부스터의 찬 거 판단] (어느쪽으로 휘어있는지)
+        self.observation_space = spaces.Box(low=0, high=1, shape=(6,), dtype=np.float)
 
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
@@ -108,7 +109,7 @@ class KartEnv(gym.Env):
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
 
-        observation = np.array([diff, -10, road_diff, 0, 100])
+        observation = np.array([diff, -10, road_diff, 0, 100, 0])
 
         # reset 출발후 시간측정 시작
         self.time1 = datetime.datetime.now()
@@ -134,6 +135,12 @@ class KartEnv(gym.Env):
         road_shifted = func.get_reverse_gradient(road_center, roadtop_center)
         road_shifted = int(max(0, min(road_shifted * 100 + 100, 200)))
 
+        boost = ip.getBoost()
+        if self.pre_boost:
+            keyinput.PressAndRelease(keyinput.BOOST, seconds=0.5)
+
+        # 부스터 쓸때마다 확인 - 부스터 없는 부분에서는 빼줘야함
+
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
         if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
@@ -152,16 +159,19 @@ class KartEnv(gym.Env):
         reward_diff, diff = self.reward_player_reddot_diff(road_center, player_pos, road_points, road_diff)
         reward_speed_diff = self.reward_speed_diff()
         reward_backward = self.reward_going_back(reverse)
+        reward_speed = 1 if cur_speed > 160 else -0.5
+        boost_return = 1 if boost else 0
 
-        observation = np.array([diff/200, cur_speed/200, road_diff/200, car_shifted/200, road_shifted/200])
+        observation = np.array([diff/200, cur_speed/200, road_diff/200, car_shifted/200, road_shifted/200, boost_return])
+        self.pre_boost = boost
 
         while True:     # 시간 Delay줌
             end_time = time.time()
             if end_time - start_step > 0.025:
                 break
         self.pre_speed = cur_speed
-        print(observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]})
-        return observation, reward_diff + reward_speed_diff + reward_backward, False, {'direction' : printLoc[action]}
+        print(observation, reward_diff + reward_speed_diff + reward_backward + reward_speed, False, {'direction' : printLoc[action]})
+        return observation, reward_diff + reward_speed_diff + reward_backward + reward_speed, False, {'direction' : printLoc[action]}
 
     def render(self, mode='human'):
         # 이건 사람이 볼 수 있게끔 에이전트를 visualize 하는건데, 이건 필요 없을듯(print 찍게하면 될거같음)
