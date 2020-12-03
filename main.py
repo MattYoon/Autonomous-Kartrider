@@ -1,4 +1,4 @@
-def launchAgent(env_name: int, model_name: str, test_mode=False):
+def launchAgent(env_name: int, model_name: str, test_mode=False, filepath=None):
     """
     :param test_mode: 에이전트를 테스트 모드로 불러와 주행시킬지를 확인하는 모드입니다. 이럴 시에 학습은 이루어지지 않으며, 주행만 이루어집니다.
     :param env_name: 불러올 환경의 이름입니다.
@@ -44,12 +44,16 @@ def launchAgent(env_name: int, model_name: str, test_mode=False):
         model = PPO2(policy=policy, learning_rate=0.0001, env=kart_env, verbose=1)
 
     if test_mode:       # 테스트 모드일때 에이전트 불러와서 작동하게함
-        model.load("Best_Agent/PPO2_best.zip")
+        model.load(filepath)
+        kart_env.set_continuos(True)
 
-        observation = kart_env.reset()
         while True:
-            action, _states = model.predict(observation)
-            observation, rewards, dones, info = kart_env.step(action)
+            observation = kart_env.reset()
+            while True:
+                action, _states = model.predict(observation)
+                observation, rewards, dones, info = kart_env.step(action)
+                if dones:
+                    break
 
     else:
         for i in range(1000):
@@ -58,6 +62,27 @@ def launchAgent(env_name: int, model_name: str, test_mode=False):
 
 
 if __name__ == "__main__":
+
+    import sys
+    import time
+    import os
+
+    PATH = os.path.dirname(os.path.realpath(__file__))
+
+    if len(sys.argv) != 2:
+        print("프로그램에 심각한 에러 발생! 종료합니다.")
+        time.sleep(2)
+
+    if sys.argv[1] == "1":
+        filepath = PATH + "/Best_Agent/PPO2_best"
+    elif sys.argv[1] == "2":
+        filepath = PATH + "/Best_Agent/PPO2_best2"
+    else:
+        print("프로그램에 심각한 에러 발생! 종료합니다.")
+        time.sleep(2)
+
+
+
 
     # 에이전트 및 환경 설정
     agent = "PPO2"
@@ -83,6 +108,6 @@ if __name__ == "__main__":
 
         manager = Manager()
         runIP(manager)
-        launchAgent(env, agent)
+        launchAgent(env, agent, test_mode=True, filepath=filepath)
 
 

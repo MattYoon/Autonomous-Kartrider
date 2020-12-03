@@ -71,7 +71,7 @@ class KartEnv(gym.Env):
     pre_direction = 4
     speed_queue = deque()
 
-    def __init__(self):
+    def __init__(self, continuos=False):
         super(KartEnv, self).__init__()
 
         # Reward 설정
@@ -87,6 +87,11 @@ class KartEnv(gym.Env):
         self.speed_queue.append(-10)
         self.speed_queue.append(-10)
         self.pre_speed = -10
+
+        self.continuos = continuos
+
+    def set_continuos(self, continuos):
+        self.continuos = continuos
 
     def reset(self):
         # 에피소드의 시작에 불려지며, observation을 돌려준다
@@ -136,16 +141,7 @@ class KartEnv(gym.Env):
 
         self.speed_queue.popleft()
         self.speed_queue.append(cur_speed)
-        if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
-            print("Episode Ended, with return state True")
-            return [0, 0, 0], -20, True, {}
-        if ip.isLap2():     # 두 번째 맵에 도달하면 게임 종료 및 로그 남김
-            cur_time = datetime.datetime.now()
-            print("한바퀴 돌기 성공!")
-            with open("success_" + cur_time.strftime("%d%H%M%S") + ".txt", "w", encoding="utf8") as file:
-                file.writelines("한 바퀴 주행 성공!\n")
-                file.writelines(str(cur_time - self.time1))
-            return [0, 0, 0], 1000, True, {}
+
 
         # observation은 총 3개 - [ 중앙의 정도, 속도, 길의 커브정도] 로 오고
         # 보상으로 중앙의 정도에 대한 보상(reward_diff), 속도에 대한 보상(reward_speed), 거꾸로 갈 때 음수를 주는 보상(reward_backward)이 온다.
@@ -154,6 +150,17 @@ class KartEnv(gym.Env):
         reward_backward = self.reward_going_back(reverse)
 
         observation = np.array([diff/200, cur_speed/200, road_diff/200, car_shifted/200, road_shifted/200])
+
+        if self.speed_queue[0] == 0 and self.speed_queue[1] == 0:
+            print("Episode Ended, with return state True")
+            return observation, -20, True, {}
+        if ip.isLap2() and not self.continuos:     # 두 번째 맵에 도달하면 게임 종료 및 로그 남김
+            cur_time = datetime.datetime.now()
+            print("한바퀴 돌기 성공!")
+            with open("success_" + cur_time.strftime("%d%H%M%S") + ".txt", "w", encoding="utf8") as file:
+                file.writelines("한 바퀴 주행 성공!\n")
+                file.writelines(str(cur_time - self.time1))
+            return observation, 1000, True, {}
 
         while True:     # 시간 Delay줌
             end_time = time.time()
