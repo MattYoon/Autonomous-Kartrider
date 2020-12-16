@@ -5,6 +5,9 @@
 
 **영상처리: 17학번 윤동근**
 
+### 프로젝트 결과 발표 영상
+ - https://www.youtube.com/watch?v=BMErE9d76Uk&feature=youtu.be&ab_channel=Yoon%27sProgramming
+
 ### 주의사항 및 실행방법
 - 게임 내 설정 -> 그래픽 -> 그래픽 설정 -> 창모드 ON, 그외 모두 OFF
 - 게임 내에서 Tab 키를 눌러 미니맵을 가장 왼쪽 위치로 이동시켜 주세요
@@ -31,28 +34,3 @@ main.py 안의 agent, env 변수 (`if __name__ == "__main__"` 블록 밑에 있�
 pip install opencv-python mss pywin32 pyautoit tensorflow==1.14 stable-baselines numpy==1.19.2
 ```
 
-
-**영상처리 현재 구현사항**
-1. 카트라이더 프로그램 윈도우 좌표 파악 및 영상 획득
-2. 레이스 시작 카운트 다운 숫자 인식 및 출발 부스터 타이밍에 맞춰 출발
-3. 미니맵을 통한 앞으로의 진행 path, 사용자 현재 위치 등 획득
-4. 현재 속도 획득
-5. 역주행 중인지 판별
-
-&nbsp;
-
-
-
-
-
----
-Keyinput.py 사용법 
-
-    from Keyinput import PressKey, ReleaseKey, FORWARD
-    
-    PressKey(FORWARD)
-    time.sleep(1)
-    ReleaseKey(FORWARD)
-
-    #전진에 해당하는 키가 1초 동안 입력
-    #FORWARD 외에도 다른 필요 키의 Scan Code가 Keyinput에 정의되어 있음
