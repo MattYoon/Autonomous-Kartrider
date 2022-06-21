@@ -5,8 +5,7 @@
 
 **영상처리: 17학번 윤동근**
 
-### 프로젝트 결과 발표 영상
- - https://www.youtube.com/watch?v=BMErE9d76Uk&feature=youtu.be&ab_channel=Yoon%27sProgramming
+### [프로젝트 결과 발표 영상](https://www.youtube.com/watch?v=BMErE9d76Uk&feature=youtu.be&ab_channel=Yoon%27sProgramming)
 
 ### 주의사항 및 실행방법
 - 게임 내 설정 -> 그래픽 -> 그래픽 설정 -> 창모드 ON, 그외 모두 OFF
@@ -21,8 +20,8 @@ main.py 안의 agent, env 변수 (`if __name__ == "__main__"` 블록 밑에 있�
 
 ### 설치 필요 라이브러리
 
-1. OpenCV(cv2) https://pypi.org/project/opencv-python/
-2. mss(화면 영상 추출) https://pypi.org/project/mss/
+1. OpenCV(cv2)
+2. mss(화면 영상 추출)
 3. pywin32(키보드 입력)
 4. pyautoit(마우스 입력)
 5. tensorflow(1.14 버전, 강화학습 에이전트 의존성 때문)
